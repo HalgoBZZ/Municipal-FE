@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.halgo.municipalpfe.InscriptionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorBlueGrayOp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            >
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/colorBlueGrayOp">
+            <TextView
+                android:id="@+id/inscrit_warn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="20dp"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/error" />
+            <EditText
+                android:id="@+id/inscrit_nom"
+                android:hint="Nom"
+                android:layout_marginTop="40dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_height="wrap_content"
+                />
+            <EditText
+                android:id="@+id/inscrit_prenom"
+                android:inputType="text"
+                android:hint="Prénom"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/inscrit_tel"
+                android:inputType="number"
+                android:hint="Numéro de telephone"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/inscrit_email"
+                android:inputType="textEmailAddress"
+                android:hint="Email"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/inscrit_pwd"
+                android:inputType="textPassword"
+                android:hint="Mot de passe"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/inscrit_conf"
+                android:inputType="textPassword"
+                android:hint="Confirmer mot de passe"
+                android:textColorHint="#fff"
+                android:textColor="#fff"
+                android:background="@color/bluebrayfonced"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="30dp"
+                >
+                <Button
+                    android:id="@+id/backtoAoth"
+                    android:layout_width="145dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/colorBLGR"
+                    android:text="Retour"
+                    android:textColor="#fff" />
+                <Button
+                    android:id="@+id/inscrit"
+                    android:textColor="#fff"
+                    android:width="145dp"
+                    android:background="@color/colorBLGR"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="S'inscrire"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
