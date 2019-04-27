@@ -3,29 +3,22 @@ package com.halgo.municipalpfe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.halgo.municipalpfe.adapters.OffreAdapter;
-import com.halgo.municipalpfe.modals.Offre;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class OffresActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class DetailsClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView menu_icon;
     private ImageView notification_icon;
@@ -33,35 +26,42 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     private ImageView logout_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
+    private ImageButton delete_btn;
+    private ImageButton update_btn;
+    private TextView nom_prenom;
+    private TextView naissance;
+    private TextView cin;
+    private TextView ajout;
+    private TextView modification;
     private boolean isOpen;
-    private RecyclerView recyclerView;
-    private OffreAdapter mAdapter;
-    private FloatingActionButton add_button;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
-    private List<Offre> offres = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.offres);
+        setContentView(R.layout.details_clients);
         setNavigationViewListner();
 
 
-        menu_icon = findViewById(R.id.menu_tour_offres);
-        notification_icon = findViewById(R.id.notification_offres);
-        help_icon = findViewById(R.id.help_offres);
-        logout_icon = findViewById(R.id.logout_offres);
-        mDrawerlayout = findViewById(R.id.draw_offres);
-        recyclerView = findViewById(R.id.recycler_view_offres);
-        add_button = findViewById(R.id.add_new_offres);
-        mAdapter = new OffreAdapter(offres);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        menu_icon = findViewById(R.id.menu_details_client);
+        notification_icon = findViewById(R.id.notification_details_client);
+        help_icon = findViewById(R.id.help_details_client);
+        logout_icon = findViewById(R.id.logout_details_client);
+        mDrawerlayout = findViewById(R.id.draw_details_client);
+        delete_btn = findViewById(R.id.delete_client_btn);
+        update_btn = findViewById(R.id.update_client_btn);
+        nom_prenom = findViewById(R.id.nom_prenom_details_client);
+        naissance = findViewById(R.id.naissance_details_client);
+        cin = findViewById(R.id.cin_details_client);
+        ajout = findViewById(R.id.ajout_details_client);
+        modification = findViewById(R.id.modification_details_client);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+
+
+
+        NavigationView navigationView = findViewById(R.id.nav_view_details_client);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
         mDrawerlayout.addDrawerListener(mToggle);
@@ -70,36 +70,28 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
 
-        add_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NewOffre.class));
-            }
-        });
+
+
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NotificationsActivity.class));
+                startActivity(new Intent(DetailsClientActivity.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, HelpActivity.class));
+                startActivity(new Intent(DetailsClientActivity.this, HelpActivity.class));
             }
         });
 
         logout_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, MainActivity.class));
+                startActivity(new Intent(DetailsClientActivity.this, MainActivity.class));
             }
         });
 
@@ -125,32 +117,33 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
         switch (item.getItemId()){
             case R.id.client_admin :
-                startActivity(new Intent(OffresActivity.this, Clients.class));
+                startActivity(new Intent(DetailsClientActivity.this, Clients.class));
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(OffresActivity.this, PropertiesActivity.class));
+                startActivity(new Intent(DetailsClientActivity.this, PropertiesActivity.class));
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(OffresActivity.this, OffresActivity.class));
+                startActivity(new Intent(DetailsClientActivity.this, OffresActivity.class));
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(OffresActivity.this, Payements.class));
+                startActivity(new Intent(DetailsClientActivity.this, Payements.class));
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(OffresActivity.this, Contrats.class));
+                startActivity(new Intent(DetailsClientActivity.this, Contrats.class));
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(OffresActivity.this, Configurations.class));
+                startActivity(new Intent(DetailsClientActivity.this, Configurations.class));
                 break;
             default:
                 break;
         }
-       mDrawerlayout.closeDrawer(GravityCompat.START);
+        mDrawerlayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void setNavigationViewListner() {
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        NavigationView navigationView = findViewById(R.id.nav_view_details_client);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 }

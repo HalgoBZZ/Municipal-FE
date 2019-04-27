@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -20,7 +21,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_marginTop="10dp"
-                    android:id="@+id/photoprofil_properties"
+                    android:id="@+id/photoprofil_details_propertie"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
@@ -34,7 +35,7 @@
                     android:textColor="#fff"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="center"
-                    android:id="@+id/connected_user_properties"
+                    android:id="@+id/connected_user_details_propertie"
                     android:textStyle="bold"/>
 
             </LinearLayout>
@@ -55,7 +56,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/menu_properties"
+                            android:id="@+id/menu_details_propertie"
                             android:src="@drawable/ic_menus"/>
 
                     </LinearLayout>
@@ -66,7 +67,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/notification_properties"
+                            android:id="@+id/notification_details_propertie"
                             android:src="@drawable/ic_notifications"/>
 
                     </LinearLayout>
@@ -77,7 +78,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/help_properties"
+                            android:id="@+id/help_details_propertie"
                             android:src="@drawable/ic_help"/>
 
                     </LinearLayout>
@@ -88,7 +89,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/user_properties"
+                            android:id="@+id/user_details_propertie"
                             android:src="@drawable/ic_person"/>
                     </LinearLayout>
                     <LinearLayout
@@ -98,7 +99,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/logout_properties"
+                            android:id="@+id/logout_details_propertie"
                             android:src="@drawable/exit"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -109,22 +110,91 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:id="@+id/drawcontainer_properties">
+            android:id="@+id/drawcontainer_details_propertie">
             <android.support.v4.widget.DrawerLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="-10dp"
-                android:id="@+id/draw_properties"
+                android:id="@+id/draw_details_propertie"
                 >
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view_properties"
+                <RelativeLayout
+                    android:id="@+id/recycler_view_details_propertie"
                     android:padding="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="vertical"
+                    android:layout_marginTop="20dp"
+                    android:paddingLeft="15dp">
+                    <TextView
+                        android:id="@+id/adresse_details_propertie"
+                        android:text="Adresse"
+                        android:textColor="@color/title"
+                        android:textStyle="bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="20dp"/>
+                    <TextView
+                        android:id="@+id/surface_details_propertie"
+                        android:layout_marginBottom="20dp"
+                        android:textColor="@color/title"
+                        android:textStyle="bold"
+                        android:text="surface : 20 m²"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/adresse_details_propertie"/>
+                    <TextView
+                        android:id="@+id/type_details_propertie"
+                        android:layout_marginBottom="20dp"
+                        android:textColor="@color/title"
+                        android:textStyle="bold"
+                        android:text="Restaurant"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/surface_details_propertie"/>
+
+                    <TextView
+                        android:id="@+id/ajout_details_propertie"
+                        android:textColor="@color/title"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="20dp"
+                        android:text="Ajouté le 02-02-2019"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/type_details_propertie"/>
+                    <TextView
+                        android:id="@+id/modification_details_propertie"
+                        android:textColor="@color/title"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="20dp"
+                        android:text="Modifié le 01-03-2019"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ajout_details_propertie"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/modification_details_propertie"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+                        <ImageButton
+                            android:id="@+id/update_propertie_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_edit_black_24dp"
+                            android:layout_marginLeft="30dp"
+                            app:backgroundTint="@color/bluebrayfonced" />
+                        <ImageButton
+                            android:id="@+id/delete_propertie_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:backgroundTint="@color/bluebrayfonced"
+                            android:src="@drawable/ic_delete_forever_black_24dp"/>
+                    </LinearLayout>
+                </RelativeLayout>
                 <android.support.design.widget.NavigationView
-                    android:id="@+id/nav_view_properties"
+                    android:id="@+id/nav_view_details_propertie"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="@color/colorBLGR"
@@ -132,6 +202,7 @@
                     app:menu="@menu/drawermenu1"
                     android:paddingLeft="16dp"
                     android:layout_gravity="start">
+
                 </android.support.design.widget.NavigationView>
             </android.support.v4.widget.DrawerLayout>
 
@@ -141,12 +212,5 @@
 
 
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_new_properties"
-        app:backgroundTint="@color/bluebrayfonced"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_add_black_24dp"
-        android:layout_margin="16dp" />
+
 </android.support.design.widget.CoordinatorLayout>

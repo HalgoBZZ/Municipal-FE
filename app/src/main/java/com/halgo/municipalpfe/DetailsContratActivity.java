@@ -3,29 +3,21 @@ package com.halgo.municipalpfe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.halgo.municipalpfe.adapters.OffreAdapter;
-import com.halgo.municipalpfe.modals.Offre;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class OffresActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class DetailsContratActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView menu_icon;
     private ImageView notification_icon;
@@ -33,35 +25,43 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     private ImageView logout_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
+    private ImageButton delete_btn;
+    private ImageButton update_btn;
+    private TextView titre;
+    private TextView debut;
+    private TextView fin;
+    private TextView prix;
+    private TextView ajout;
+    private TextView modification;
     private boolean isOpen;
-    private RecyclerView recyclerView;
-    private OffreAdapter mAdapter;
-    private FloatingActionButton add_button;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
-    private List<Offre> offres = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.offres);
+        setContentView(R.layout.details_contrat);
         setNavigationViewListner();
 
 
-        menu_icon = findViewById(R.id.menu_tour_offres);
-        notification_icon = findViewById(R.id.notification_offres);
-        help_icon = findViewById(R.id.help_offres);
-        logout_icon = findViewById(R.id.logout_offres);
-        mDrawerlayout = findViewById(R.id.draw_offres);
-        recyclerView = findViewById(R.id.recycler_view_offres);
-        add_button = findViewById(R.id.add_new_offres);
-        mAdapter = new OffreAdapter(offres);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        menu_icon = findViewById(R.id.menu_details_contrat);
+        notification_icon = findViewById(R.id.notification_details_contrat);
+        help_icon = findViewById(R.id.help_details_contrat);
+        logout_icon = findViewById(R.id.logout_details_contrat);
+        mDrawerlayout = findViewById(R.id.draw_details_contrat);
+        delete_btn = findViewById(R.id.delete_contrat_btn);
+        update_btn = findViewById(R.id.update_contrat_btn);
+        titre = findViewById(R.id.titre_details_contrat);
+        debut = findViewById(R.id.debut_details_contrat);
+        fin = findViewById(R.id.fin_details_contrat);
+        prix = findViewById(R.id.prix_details_contrat);
+        ajout = findViewById(R.id.ajout_details_contrat);
+        modification = findViewById(R.id.modification_details_contrat);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+
+
+        NavigationView navigationView = findViewById(R.id.nav_view_details_client);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
         mDrawerlayout.addDrawerListener(mToggle);
@@ -70,36 +70,25 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-
-        add_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NewOffre.class));
-            }
-        });
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NotificationsActivity.class));
+                startActivity(new Intent(DetailsContratActivity.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, HelpActivity.class));
+                startActivity(new Intent(DetailsContratActivity.this, HelpActivity.class));
             }
         });
 
         logout_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, MainActivity.class));
+                startActivity(new Intent(DetailsContratActivity.this, MainActivity.class));
             }
         });
 
@@ -119,38 +108,38 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        switch (item.getItemId()){
-            case R.id.client_admin :
-                startActivity(new Intent(OffresActivity.this, Clients.class));
+        switch (item.getItemId()) {
+            case R.id.client_admin:
+                startActivity(new Intent(DetailsContratActivity.this, Clients.class));
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(OffresActivity.this, PropertiesActivity.class));
+                startActivity(new Intent(DetailsContratActivity.this, PropertiesActivity.class));
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(OffresActivity.this, OffresActivity.class));
+                startActivity(new Intent(DetailsContratActivity.this, OffresActivity.class));
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(OffresActivity.this, Payements.class));
+                startActivity(new Intent(DetailsContratActivity.this, Payements.class));
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(OffresActivity.this, Contrats.class));
+                startActivity(new Intent(DetailsContratActivity.this, Contrats.class));
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(OffresActivity.this, Configurations.class));
+                startActivity(new Intent(DetailsContratActivity.this, Configurations.class));
                 break;
             default:
                 break;
         }
-       mDrawerlayout.closeDrawer(GravityCompat.START);
+        mDrawerlayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void setNavigationViewListner() {
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        NavigationView navigationView = findViewById(R.id.nav_view_details_contrat);
         navigationView.setNavigationItemSelectedListener(this);
     }
 }
+

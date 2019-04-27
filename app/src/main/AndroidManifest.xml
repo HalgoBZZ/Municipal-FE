@@ -26,6 +26,19 @@
         <activity android:name=".PropertiesActivity"></activity>
         <activity android:name=".NewPassword"></activity>
         <activity android:name=".SendCode"></activity>
+        <activity android:name=".DetailsOffreActivity"></activity>
+        <activity android:name=".NewOffre"></activity>
+        <activity android:name=".Clients"></activity>
+        <activity android:name=".Payements"></activity>
+        <activity android:name=".Contrats"></activity>
+        <activity android:name=".PropertiesClientActivity"></activity>
+        <activity android:name=".DetailsClientActivity"></activity>
+        <activity android:name=".NewClient"></activity>
+        <activity android:name=".DetailsPropertieActivity"></activity>
+        <activity android:name=".DetailsContratActivity"></activity>
+        <activity android:name=".NewPropertie"></activity>
+        <activity android:name=".NewContrat"></activity>
+        <activity android:name=".DetailsPayementActivity"></activity>
     </application>
 
 </manifest>

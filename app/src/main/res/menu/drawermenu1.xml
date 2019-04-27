@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/tourne" android:title="Tournées" android:icon="@drawable/android"/>
-    <item android:id="@+id/planin" android:title="proprietés" android:icon="@drawable/android"/>
-    <item android:id="@+id/trajectoir" android:title="offres" android:icon="@drawable/android"/>
-    <item android:id="@+id/langu" android:title="Langue" android:icon="@drawable/android">
+    <item android:id="@+id/client_admin" android:title="Clients" />
+    <item android:id="@+id/properties_admin" android:title="proprietés" />
+    <item android:id="@+id/offres_admin" android:title="offres" />
+    <item android:id="@+id/payements_admin" android:title="Payements" />
+    <item android:id="@+id/contrats_admin" android:title="Contrats" />
+    <item android:id="@+id/configs_admin" android:title="Configurations" />
+    <item android:id="@+id/langue_admin" android:title="Langue" >
+
         <menu>
             <item android:id="@+id/fr1" android:title="Français"/>
             <item android:id="@+id/ar1" android:title="العربية" />

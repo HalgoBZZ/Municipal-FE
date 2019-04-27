@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/properties_client" android:title="Mes proprietés" />
+    <item android:id="@+id/offres_client" android:title="offres"/>
+    <item android:id="@+id/payements_client" android:title="Payements"/>
+    <item android:id="@+id/contrats_client" android:title="Contrats"/>
+    <item android:id="@+id/langue_client" android:title="Langue">
+
+        <menu>
+            <item android:id="@+id/fr1" android:title="Français"/>
+            <item android:id="@+id/ar1" android:title="العربية" />
+        </menu>
+    </item>
+</menu>

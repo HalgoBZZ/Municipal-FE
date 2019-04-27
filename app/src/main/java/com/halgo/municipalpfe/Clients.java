@@ -13,19 +13,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.halgo.municipalpfe.adapters.OffreAdapter;
-import com.halgo.municipalpfe.modals.Offre;
+import com.halgo.municipalpfe.adapters.ClientAdapter;
 
+import com.halgo.municipalpfe.modals.Client;
+
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OffresActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Clients extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private ImageView menu_icon;
     private ImageView notification_icon;
@@ -35,33 +37,33 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     private ActionBarDrawerToggle mToggle;
     private boolean isOpen;
     private RecyclerView recyclerView;
-    private OffreAdapter mAdapter;
+    private ClientAdapter mAdapter;
     private FloatingActionButton add_button;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
-    private List<Offre> offres = new ArrayList<>();
+    private List<Client> clients = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.offres);
+        setContentView(R.layout.clients);
         setNavigationViewListner();
 
 
-        menu_icon = findViewById(R.id.menu_tour_offres);
-        notification_icon = findViewById(R.id.notification_offres);
-        help_icon = findViewById(R.id.help_offres);
-        logout_icon = findViewById(R.id.logout_offres);
-        mDrawerlayout = findViewById(R.id.draw_offres);
-        recyclerView = findViewById(R.id.recycler_view_offres);
-        add_button = findViewById(R.id.add_new_offres);
-        mAdapter = new OffreAdapter(offres);
+        menu_icon = findViewById(R.id.menu_clients);
+        notification_icon = findViewById(R.id.notification_clients);
+        help_icon = findViewById(R.id.help_clients);
+        logout_icon = findViewById(R.id.logout_clients);
+        mDrawerlayout = findViewById(R.id.draw_clients);
+        recyclerView = findViewById(R.id.recycler_view_clients);
+        add_button = findViewById(R.id.add_new_clients);
+        mAdapter = new ClientAdapter(clients);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        NavigationView navigationView = findViewById(R.id.nav_view_clients);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
         mDrawerlayout.addDrawerListener(mToggle);
@@ -70,36 +72,35 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
+        this.clients.add(new Client("Baazouzi", "Hafedh", 12604555));
+        this.clients.add(new Client("Baazouzi", "Hafedh", 12604555));
+        this.clients.add(new Client("Baazouzi", "Hafedh", 12604555));
 
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NewOffre.class));
+                startActivity(new Intent(Clients.this, NewClient.class));
             }
         });
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NotificationsActivity.class));
+                startActivity(new Intent(Clients.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, HelpActivity.class));
+                startActivity(new Intent(Clients.this, HelpActivity.class));
             }
         });
 
         logout_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, MainActivity.class));
+                startActivity(new Intent(Clients.this, MainActivity.class));
             }
         });
 
@@ -125,32 +126,32 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
         switch (item.getItemId()){
             case R.id.client_admin :
-                startActivity(new Intent(OffresActivity.this, Clients.class));
+                startActivity(new Intent(Clients.this, Clients.class));
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(OffresActivity.this, PropertiesActivity.class));
+                startActivity(new Intent(Clients.this, PropertiesActivity.class));
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(OffresActivity.this, OffresActivity.class));
+                startActivity(new Intent(Clients.this, OffresActivity.class));
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(OffresActivity.this, Payements.class));
+                startActivity(new Intent(Clients.this, Payements.class));
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(OffresActivity.this, Contrats.class));
+                startActivity(new Intent(Clients.this, Contrats.class));
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(OffresActivity.this, Configurations.class));
+                startActivity(new Intent(Clients.this, Configurations.class));
                 break;
             default:
                 break;
         }
-       mDrawerlayout.closeDrawer(GravityCompat.START);
+        mDrawerlayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     private void setNavigationViewListner() {
-        NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
+        NavigationView navigationView = findViewById(R.id.nav_view_clients);
         navigationView.setNavigationItemSelectedListener(this);
     }
 }
