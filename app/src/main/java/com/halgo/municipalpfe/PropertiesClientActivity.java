@@ -67,9 +67,9 @@ public class PropertiesClientActivity extends AppCompatActivity implements Navig
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        /*this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
         this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
-        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
-        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
+        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));*/
 
 
         notification_icon.setOnClickListener(new View.OnClickListener() {

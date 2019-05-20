@@ -122,21 +122,30 @@ public class PropertiesActivity extends AppCompatActivity implements NavigationV
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PropertiesActivity.this, NewOffre.class));
+                Intent intent = new Intent(PropertiesActivity.this, NewPropertie.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
             }
         });
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PropertiesActivity.this, NotificationsActivity.class));
+                Intent intent = new Intent(PropertiesActivity.this, NotificationsActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PropertiesActivity.this, HelpActivity.class));
+                Intent intent = new Intent(PropertiesActivity.this, HelpActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
             }
         });
 
@@ -150,7 +159,10 @@ public class PropertiesActivity extends AppCompatActivity implements NavigationV
         profile_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(PropertiesActivity.this, ProfileActivity.class));
+                Intent intent = new Intent(PropertiesActivity.this, ProfileActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
             }
         });
 

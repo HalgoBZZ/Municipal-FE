@@ -57,11 +57,11 @@ public class NewPropertie extends AppCompatActivity implements NavigationView.On
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_client);
+        setContentView(R.layout.new_proprtie);
         setNavigationViewListner();
 
         mDrawerlayout = findViewById(R.id.draw_new_propertie);
-        menu_icon = findViewById(R.id.menu_new_client);
+        menu_icon = findViewById(R.id.menu_new_propriete);
         notification_icon = findViewById(R.id.notification_new_propriete);
         help_icon = findViewById(R.id.help_new_propriete);
         logout_icon = findViewById(R.id.logout_new_propriete);
@@ -215,7 +215,7 @@ public class NewPropertie extends AppCompatActivity implements NavigationView.On
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(NewPropertie.this, "Client ajouté avec succés", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewPropertie.this, "Proprieté ajouté avec succés", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewPropertie.this, PropertiesActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
