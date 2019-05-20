@@ -1,74 +1,82 @@
 package com.halgo.municipalpfe.modals;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Contrat {
+public class Contrat implements Serializable {
 
-    private String id;
-    private String titre;
-    private LocalDate debut;
-    private LocalDate fin;
+    private Long id_contrat;
+
+    private String titre_contrat;
+
+    private String date_debut;
+
+    private String date_fin;
+
     private double prix;
-    private LocalDate ajout;
-    private LocalDate modification;
+
+    private String date_ajout;
+
+    private String date_modification;
+
+    private List<Payement> payements = new ArrayList<>();
+
+    private Propriete propriete;
+
 
     public Contrat() {
-    }
-
-    public Contrat(String titre, LocalDate debut, LocalDate fin, double prix, LocalDate ajout, LocalDate modification) {
-        this.titre = titre;
-        this.debut = debut;
-        this.fin = fin;
-        this.prix = prix;
-        this.ajout = ajout;
-        this.modification = modification;
-    }
-
-    public Contrat(String id, String titre, LocalDate debut, LocalDate fin, double prix, LocalDate ajout, LocalDate modification) {
-        this.id = id;
-        this.titre = titre;
-        this.debut = debut;
-        this.fin = fin;
-        this.prix = prix;
-        this.ajout = ajout;
-        this.modification = modification;
+        super();
     }
 
     public Contrat(String titre, double prix) {
-        this.titre = titre;
+        this.titre_contrat = titre;
         this.prix = prix;
+
+    }
+    public Contrat(Long id_contrat, String titre_contrat, String date_debut, String date_fin, double prix,
+                   String date_ajout, String date_modification) {
+        super();
+        this.id_contrat = id_contrat;
+        this.titre_contrat = titre_contrat;
+        this.date_debut = date_debut;
+        this.date_fin = date_fin;
+        this.prix = prix;
+        this.date_ajout = date_ajout;
+        this.date_modification = date_modification;
     }
 
-    public String getId() {
-        return id;
+    public Long getId_contrat() {
+        return id_contrat;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId_contrat(Long id_contrat) {
+        this.id_contrat = id_contrat;
     }
 
-    public String getTitre() {
-        return titre;
+    public String getTitre_contrat() {
+        return titre_contrat;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
+    public void setTitre_contrat(String titre_contrat) {
+        this.titre_contrat = titre_contrat;
     }
 
-    public LocalDate getDebut() {
-        return debut;
+    public String getDate_debut() {
+        return date_debut;
     }
 
-    public void setDebut(LocalDate debut) {
-        this.debut = debut;
+    public void setDate_debut(String date_debut) {
+        this.date_debut = date_debut;
     }
 
-    public LocalDate getFin() {
-        return fin;
+    public String getDate_fin() {
+        return date_fin;
     }
 
-    public void setFin(LocalDate fin) {
-        this.fin = fin;
+    public void setDate_fin(String date_fin) {
+        this.date_fin = date_fin;
     }
 
     public double getPrix() {
@@ -79,19 +87,35 @@ public class Contrat {
         this.prix = prix;
     }
 
-    public LocalDate getAjout() {
-        return ajout;
+    public String getDate_ajout() {
+        return date_ajout;
     }
 
-    public void setAjout(LocalDate ajout) {
-        this.ajout = ajout;
+    public void setDate_ajout(String date_ajout) {
+        this.date_ajout = date_ajout;
     }
 
-    public LocalDate getModification() {
-        return modification;
+    public String getDate_modification() {
+        return date_modification;
     }
 
-    public void setModification(LocalDate modification) {
-        this.modification = modification;
+    public void setDate_modification(String date_modification) {
+        this.date_modification = date_modification;
+    }
+
+    public List<Payement> getPayement() {
+        return payements;
+    }
+
+    public void setPayement(List<Payement> payements) {
+        this.payements = payements;
+    }
+
+    public Propriete getPropriete() {
+        return propriete;
+    }
+
+    public void setPropriete(Propriete propriete) {
+        this.propriete = propriete;
     }
 }

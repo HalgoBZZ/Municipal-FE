@@ -56,9 +56,9 @@ public class OffreAdapter extends  RecyclerView.Adapter<OffreAdapter.MyViewHolde
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Offre offre = offres.get(position);
-        holder.titre.setText(offre.getTitre());
-        holder.description.setText(offre.getDescription());
-        holder.etat.setText(offre.getEtat());
+        holder.titre.setText(offre.getTitre_offre());
+        holder.description.setText(offre.getDescription_offre());
+        holder.etat.setText(offre.getEtat().toString());
 
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

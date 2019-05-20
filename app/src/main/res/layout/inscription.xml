@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="com.halgo.municipalpfe.InscriptionActivity">
 
     <LinearLayout
@@ -12,13 +12,7 @@
         android:orientation="vertical"
         android:background="@color/colorBlueGrayOp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:orientation="vertical"
-            >
 
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -60,9 +54,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content" />
             <EditText
-                android:id="@+id/inscrit_tel"
+                android:id="@+id/inscrit_cin"
                 android:inputType="number"
-                android:hint="Numéro de telephone"
+                android:hint="CIN"
                 android:textColorHint="#fff"
                 android:textColor="#fff"
                 android:background="@color/bluebrayfonced"
@@ -88,9 +82,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content" />
             <EditText
-                android:id="@+id/inscrit_pwd"
-                android:inputType="textPassword"
-                android:hint="Mot de passe"
+                android:id="@+id/inscrit_date_naiss"
+                android:inputType="date"
+                android:hint="Date de naissance(aaaa-mm-jj)"
                 android:textColorHint="#fff"
                 android:textColor="#fff"
                 android:background="@color/bluebrayfonced"
@@ -102,9 +96,9 @@
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content" />
             <EditText
-                android:id="@+id/inscrit_conf"
+                android:id="@+id/inscrit_pwd"
                 android:inputType="textPassword"
-                android:hint="Confirmer mot de passe"
+                android:hint="Mot de passe"
                 android:textColorHint="#fff"
                 android:textColor="#fff"
                 android:background="@color/bluebrayfonced"

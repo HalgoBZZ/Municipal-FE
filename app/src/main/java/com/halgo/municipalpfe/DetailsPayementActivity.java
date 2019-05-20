@@ -23,6 +23,7 @@ public class DetailsPayementActivity extends AppCompatActivity implements Naviga
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
+    private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
     private ImageButton delete_btn;
@@ -38,7 +39,7 @@ public class DetailsPayementActivity extends AppCompatActivity implements Naviga
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details_payement);
+        setContentView(R.layout.details_properties);
         setNavigationViewListner();
 
 
@@ -46,9 +47,10 @@ public class DetailsPayementActivity extends AppCompatActivity implements Naviga
         notification_icon = findViewById(R.id.notification_details_payement);
         help_icon = findViewById(R.id.help_details_payement);
         logout_icon = findViewById(R.id.logout_details_payement);
+        profile_icon = findViewById(R.id.user_payements);
         mDrawerlayout = findViewById(R.id.draw_details_payement);
-        delete_btn = findViewById(R.id.delete_payement_btn);
-        update_btn = findViewById(R.id.update_payement_btn);
+       // delete_btn = findViewById(R.id.delete_payement_btn);
+        // update_btn = findViewById(R.id.update_payement_btn);
         etat = findViewById(R.id.etat_details_payement);
         duree = findViewById(R.id.debut_details_payement);
         ajout = findViewById(R.id.ajout_details_payement);
@@ -89,6 +91,13 @@ public class DetailsPayementActivity extends AppCompatActivity implements Naviga
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DetailsPayementActivity.this, MainActivity.class));
+            }
+        });
+
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DetailsPayementActivity.this, ProfileActivity.class));
             }
         });
 

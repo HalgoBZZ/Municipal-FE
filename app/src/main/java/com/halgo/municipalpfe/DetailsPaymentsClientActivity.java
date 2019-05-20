@@ -13,24 +13,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DetailsPropertieActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class DetailsPaymentsClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageView menu_icon;
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
-    private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
-    private ImageButton delete_btn;
-    private ImageButton update_btn;
-    private TextView adresse;
-    private TextView surface;
-    private TextView type;
+    private TextView etat;
+    private TextView duree;
+
     private TextView ajout;
     private TextView modification;
     private boolean isOpen;
@@ -40,29 +36,24 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.details_properties);
+        setContentView(R.layout.details_payements);
         setNavigationViewListner();
 
 
-        menu_icon = findViewById(R.id.menu_details_propertie);
-        notification_icon = findViewById(R.id.notification_details_propertie);
-        help_icon = findViewById(R.id.help_details_propertie);
-        profile_icon = findViewById(R.id.user_details_propertie);
-        logout_icon = findViewById(R.id.logout_details_propertie);
-        mDrawerlayout = findViewById(R.id.draw_details_propertie);
-        delete_btn = findViewById(R.id.delete_propertie_btn);
-        update_btn = findViewById(R.id.update_propertie_btn);
-        adresse = findViewById(R.id.adresse_details_propertie);
-        surface = findViewById(R.id.surface_details_propertie);
-        type = findViewById(R.id.type_details_propertie);
-        ajout = findViewById(R.id.ajout_details_propertie);
-        modification = findViewById(R.id.modification_details_propertie);
+        menu_icon = findViewById(R.id.menu_details_payement);
+        notification_icon = findViewById(R.id.notification_details_payement);
+        help_icon = findViewById(R.id.help_details_payement);
+        logout_icon = findViewById(R.id.logout_details_payement);
+        mDrawerlayout = findViewById(R.id.draw_details_payement);
+        duree = findViewById(R.id.debut_details_payement);
+        etat = findViewById(R.id.etat_details_payement);
+        ajout = findViewById(R.id.ajout_details_payement);
+        modification = findViewById(R.id.modification_details_payement);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
 
-
-        NavigationView navigationView = findViewById(R.id.nav_view_details_propertie);
+        NavigationView navigationView = findViewById(R.id.nav_view_details_payement);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
         mDrawerlayout.addDrawerListener(mToggle);
@@ -72,34 +63,24 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
         }
 
 
-
-
-
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, NotificationsActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, HelpActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, HelpActivity.class));
             }
         });
 
         logout_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, MainActivity.class));
-            }
-        });
-
-        profile_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, ProfileActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, MainActivity.class));
             }
         });
 
@@ -119,22 +100,21 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.properties_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, PropertiesClientActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, PropertiesClientActivity.class));
                 break;
             case R.id.offres_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, OffreClientActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, OffreClientActivity.class));
                 break;
             case R.id.payements_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, PayementClientActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, PayementClientActivity.class));
                 break;
             case R.id.contrats_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, ContratsClientActivity.class));
+                startActivity(new Intent(DetailsPaymentsClientActivity.this, ContratsClientActivity.class));
                 break;
             default:
                 break;
@@ -147,5 +127,4 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
         NavigationView navigationView = findViewById(R.id.nav_view_details_propertie);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
 }

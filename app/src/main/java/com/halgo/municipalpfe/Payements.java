@@ -14,13 +14,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.halgo.municipalpfe.adapters.OffreAdapter;
+import com.halgo.municipalpfe.api.ApiClientInterface;
+import com.halgo.municipalpfe.api.ApiPayement;
+import com.halgo.municipalpfe.api.ApiUtils;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Offre;
+import com.halgo.municipalpfe.modals.Payement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +36,9 @@ import java.util.List;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.view.PieChartView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Payements extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -35,10 +46,16 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
+    private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
+    private int payed = 0;
     private boolean isOpen;
-    //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
+    List<Payement> payements = new ArrayList<>();
+
+    private Client connectedUser ;
+    private TextView connectedUser_name;
+    private ApiPayement service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,21 +68,55 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
         notification_icon = findViewById(R.id.notification_payements);
         help_icon = findViewById(R.id.help_payements);
         logout_icon = findViewById(R.id.logout_payements);
+        profile_icon = findViewById(R.id.user_payements);
         mDrawerlayout = findViewById(R.id.draw_payements);
+
+        connectedUser_name = findViewById(R.id.connected_user_payements);
+        service = ApiUtils.getPayementService();
+        connectedUser = (Client)getIntent().getSerializableExtra("connectedUser");
+        connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
+
+
+
+        Call<List<Payement>> call = service.getAllPayements();
+        call.enqueue(new Callback<List<Payement>>() {
+            @Override
+            public void onResponse(Call<List<Payement>> call, Response<List<Payement>> response) {
+                if (response.isSuccessful()) {
+                    payements = response.body();
+        if(payements.size()>1) {
+            for (int i = 0; i < payements.size(); i++) {
+                if(payements.get(i).getEtat().equals("Paye")){
+                    payed++;
+                }
+            }
+        }
+                    Log.d("resultat:", payed+"");
 
         PieChartView pieChartView = findViewById(R.id.chart);
         List< SliceValue > pieData = new ArrayList<>();
-        pieData.add(new SliceValue(15, Color.BLUE));
-        pieData.add(new SliceValue(25, Color.GRAY));
-        pieData.add(new SliceValue(10, Color.RED));
-        pieData.add(new SliceValue(60, Color.MAGENTA));
+        if(payed >0){
+            pieData.add(new SliceValue((payed*100)/payements.size(), Color.GREEN));
+            pieData.add(new SliceValue(100 - ((payed*100)/payements.size()), Color.GRAY));
+        } else {
+            pieData.add(new SliceValue(payed, Color.GREEN));
+            pieData.add(new SliceValue(100 - payed, Color.GRAY));
+        }
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartData.setHasLabels(true).setValueLabelTextSize(14);
-        pieChartData.setHasCenterCircle(true).setCenterText1("Sales in million")
-                .setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#0097A7"));
+        pieChartData.setHasCenterCircle(true).setCenterText1("% Payé")
+                .setCenterText1FontSize(20).setCenterText1Color(Color.parseColor("#008000"));
         pieChartView.setPieChartData(pieChartData);
 
-
+                } else {
+                    Toast.makeText(Payements.this, "Une erreur s'est produite lors de chargement des données!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(Payements.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
 
@@ -103,6 +154,13 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Payements.this, ProfileActivity.class));
+            }
+        });
+
 
         menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,22 +183,34 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
         int id = item.getItemId();
         switch (item.getItemId()){
             case R.id.client_admin :
-                startActivity(new Intent(Payements.this, Clients.class));
+                Intent intent = new Intent(Payements.this, Clients.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(Payements.this, PropertiesActivity.class));
+                Intent intent1 = new Intent(Payements.this, PropertiesActivity.class);
+                intent1.putExtra("connectedUser", connectedUser);
+                startActivity(intent1);
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(Payements.this, OffresActivity.class));
+                Intent intent2 = new Intent(Payements.this, OffresActivity.class);
+                intent2.putExtra("connectedUser", connectedUser);
+                startActivity(intent2);
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(Payements.this, Payements.class));
+                Intent intent3 = new Intent(Payements.this, Payements.class);
+                intent3.putExtra("connectedUser", connectedUser);
+                startActivity(intent3);
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(Payements.this, Contrats.class));
+                Intent intent4 = new Intent(Payements.this, Contrats.class);
+                intent4.putExtra("connectedUser", connectedUser);
+                startActivity(intent4);
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(Payements.this, Configurations.class));
+                Intent intent5 = new Intent(Payements.this, Configurations.class);
+                intent5.putExtra("connectedUser", connectedUser);
+                startActivity(intent5);
                 break;
             default:
                 break;
@@ -152,5 +222,25 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
     private void setNavigationViewListner() {
         NavigationView navigationView = findViewById(R.id.nav_view_payements);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void getAllPayement() {
+        Call<List<Payement>> call = service.getAllPayements();
+        call.enqueue(new Callback<List<Payement>>() {
+            @Override
+            public void onResponse(Call<List<Payement>> call, Response<List<Payement>> response) {
+                if (response.isSuccessful()) {
+                    payements = response.body();
+                    //Log.d("resultat:", client.getId().toString());
+
+                } else {
+                    Toast.makeText(Payements.this, "Une erreur s'est produite lors de chargement des données!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(Payements.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

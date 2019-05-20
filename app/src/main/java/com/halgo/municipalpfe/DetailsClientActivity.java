@@ -24,6 +24,8 @@ public class DetailsClientActivity extends AppCompatActivity implements Navigati
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
+    private ImageView profile_icon;
+
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
     private ImageButton delete_btn;
@@ -48,6 +50,7 @@ public class DetailsClientActivity extends AppCompatActivity implements Navigati
         notification_icon = findViewById(R.id.notification_details_client);
         help_icon = findViewById(R.id.help_details_client);
         logout_icon = findViewById(R.id.logout_details_client);
+        profile_icon = findViewById(R.id.user_details_client);
         mDrawerlayout = findViewById(R.id.draw_details_client);
         delete_btn = findViewById(R.id.delete_client_btn);
         update_btn = findViewById(R.id.update_client_btn);
@@ -92,6 +95,12 @@ public class DetailsClientActivity extends AppCompatActivity implements Navigati
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DetailsClientActivity.this, MainActivity.class));
+            }
+        });
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DetailsClientActivity.this, ProfileActivity.class));
             }
         });
 

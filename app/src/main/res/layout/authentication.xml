@@ -33,7 +33,7 @@
                 android:layout_marginLeft="20dp"
                 android:textColor="@color/error" />
             <EditText
-                android:id="@+id/login"
+                android:id="@+id/email_field"
                 android:drawableStart="@drawable/ic_email_black_24dp"
                 android:drawableLeft="@drawable/ic_email_black_24dp"
                 android:hint="Email"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 />
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/password_field"
                 android:inputType="textPassword"
                 android:hint="Mot de passe"
                 android:drawableStart="@drawable/ic_lock_black_24dp"

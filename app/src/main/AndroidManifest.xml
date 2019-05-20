@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.halgo.municipalpfe">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -39,6 +40,7 @@
         <activity android:name=".NewPropertie"></activity>
         <activity android:name=".NewContrat"></activity>
         <activity android:name=".DetailsPayementActivity"></activity>
+        <activity android:name=".PayementClientActivity"></activity>
     </application>
 
 </manifest>

@@ -55,7 +55,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     @Override
     public void onBindViewHolder(ContratAdapter.MyViewHolder holder, int position) {
         Contrat contrat = contrats.get(position);
-        holder.titre.setText(contrat.getTitre());
+        holder.titre.setText(contrat.getTitre_contrat());
         holder.prix.setText(""+contrat.getPrix());
 
 

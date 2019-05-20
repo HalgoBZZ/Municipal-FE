@@ -56,9 +56,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     @Override
     public void onBindViewHolder(PayementAdapter.MyViewHolder holder, int position) {
         Payement payement = payements.get(position);
-        holder.debut.setText(""+payement.getDebut());
-        holder.fin.setText(""+payement.getFin());
-        holder.etat.setText(payement.getEtat());
+        holder.debut.setText(""+payement.getDate_debut());
+        holder.fin.setText(""+payement.getDate_fin());
+        holder.etat.setText(payement.getEtat().toString());
 
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

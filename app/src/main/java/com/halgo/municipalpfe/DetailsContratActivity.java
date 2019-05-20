@@ -23,6 +23,7 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
+    private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
     private ImageButton delete_btn;
@@ -48,6 +49,7 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
         notification_icon = findViewById(R.id.notification_details_contrat);
         help_icon = findViewById(R.id.help_details_contrat);
         logout_icon = findViewById(R.id.logout_details_contrat);
+        profile_icon = findViewById(R.id.user_details_contrat);
         mDrawerlayout = findViewById(R.id.draw_details_contrat);
         delete_btn = findViewById(R.id.delete_contrat_btn);
         update_btn = findViewById(R.id.update_contrat_btn);
@@ -61,7 +63,7 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
 
-        NavigationView navigationView = findViewById(R.id.nav_view_details_client);
+        NavigationView navigationView = findViewById(R.id.nav_view_details_contrat);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
         mDrawerlayout.addDrawerListener(mToggle);
@@ -82,6 +84,13 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(DetailsContratActivity.this, HelpActivity.class));
+            }
+        });
+
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DetailsContratActivity.this, ProfileActivity.class));
             }
         });
 

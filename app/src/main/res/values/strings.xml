@@ -5,4 +5,11 @@
     <string name="close">Close</string>
     <string name="my_cart">My Cart</string>
     <string name="delete">DELETE</string>
+        <string-array name="types_array">
+            <item>Boutique</item>
+            <item>Jardin publique</item>
+            <item>Magasin industiel</item>
+            <item>Parc</item>
+            <item>Terrain</item>
+        </string-array>
 </resources>

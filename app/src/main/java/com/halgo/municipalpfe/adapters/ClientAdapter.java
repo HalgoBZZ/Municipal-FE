@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.halgo.municipalpfe.DetailsClientActivity;
-import com.halgo.municipalpfe.DetailsOffreActivity;
 import com.halgo.municipalpfe.R;
 import com.halgo.municipalpfe.modals.Client;
 
@@ -56,7 +55,7 @@ public class ClientAdapter extends  RecyclerView.Adapter<ClientAdapter.MyViewHol
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Client client = clients.get(position);
-        holder.nom_prenom.setText(client.getNom()+" "+client.getPrenom());
+        holder.nom_prenom.setText(client.getNom_client()+" "+client.getPrenom_client());
 
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

@@ -14,16 +14,28 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.halgo.municipalpfe.adapters.OffreAdapter;
+import com.halgo.municipalpfe.api.ApiOffre;
+import com.halgo.municipalpfe.api.ApiUtils;
+import com.halgo.municipalpfe.modals.Client;
+import com.halgo.municipalpfe.modals.EtatOffre;
 import com.halgo.municipalpfe.modals.Offre;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OffresActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -31,14 +43,19 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     private ImageView notification_icon;
     private ImageView help_icon;
     private ImageView logout_icon;
+    private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
     private boolean isOpen;
     private RecyclerView recyclerView;
     private OffreAdapter mAdapter;
     private FloatingActionButton add_button;
-    //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
-    private List<Offre> offres = new ArrayList<>();
+    private Client connectedUser ;
+    private TextView connectedUser_name;
+    private ApiOffre service;
+
+
+    private List<Offre> list_offres = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +68,42 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
         notification_icon = findViewById(R.id.notification_offres);
         help_icon = findViewById(R.id.help_offres);
         logout_icon = findViewById(R.id.logout_offres);
+        profile_icon = findViewById(R.id.user_offres);
+        connectedUser_name = findViewById(R.id.connected_user_offres);
+        service = ApiUtils.getOffreService();
+
         mDrawerlayout = findViewById(R.id.draw_offres);
         recyclerView = findViewById(R.id.recycler_view_offres);
         add_button = findViewById(R.id.add_new_offres);
-        mAdapter = new OffreAdapter(offres);
+
+        connectedUser = (Client)getIntent().getSerializableExtra("connectedUser");
+        connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        Call<List<Offre>> call = service.getAllOffres();
+        call.enqueue(new Callback<List<Offre>>() {
+            @Override
+            public void onResponse(Call<List<Offre>> call, Response<List<Offre>> response) {
+                if (response.isSuccessful()) {
+                    list_offres = response.body();
+                    mAdapter = new OffreAdapter(list_offres);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(mAdapter);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+                    if (list_offres.size()<1) {
+                        Toast.makeText(OffresActivity.this, "Aucun offre à afficher", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(OffresActivity.this, "Une erreur s'est produite lors de chargement des données!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(OffresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
         NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);
@@ -70,36 +113,49 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
-        this.offres.add(new Offre("offre1", "description1", "etat1"));
 
         add_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NewOffre.class));
+                Intent intent = new Intent(OffresActivity.this, NewOffre.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
             }
         });
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, NotificationsActivity.class));
+                Intent intent = new Intent(OffresActivity.this, NotificationsActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, HelpActivity.class));
+                Intent intent = new Intent(OffresActivity.this, HelpActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
             }
         });
 
         logout_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffresActivity.this, MainActivity.class));
+                Intent intent = new Intent(OffresActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(OffresActivity.this, ProfileActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
             }
         });
 
@@ -125,22 +181,34 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
         switch (item.getItemId()){
             case R.id.client_admin :
-                startActivity(new Intent(OffresActivity.this, Clients.class));
+                Intent intent = new Intent(OffresActivity.this, Clients.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(OffresActivity.this, PropertiesActivity.class));
+                Intent intent1 = new Intent(OffresActivity.this, PropertiesActivity.class);
+                intent1.putExtra("connectedUser", connectedUser);
+                startActivity(intent1);
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(OffresActivity.this, OffresActivity.class));
+                Intent intent2 = new Intent(OffresActivity.this, OffresActivity.class);
+                intent2.putExtra("connectedUser", connectedUser);
+                startActivity(intent2);
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(OffresActivity.this, Payements.class));
+                Intent intent3 = new Intent(OffresActivity.this, Payements.class);
+                intent3.putExtra("connectedUser", connectedUser);
+                startActivity(intent3);
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(OffresActivity.this, Contrats.class));
+                Intent intent4 = new Intent(OffresActivity.this, Contrats.class);
+                intent4.putExtra("connectedUser", connectedUser);
+                startActivity(intent4);
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(OffresActivity.this, Configurations.class));
+                Intent intent5 = new Intent(OffresActivity.this, Configurations.class);
+                intent5.putExtra("connectedUser", connectedUser);
+                startActivity(intent5);
                 break;
             default:
                 break;
@@ -152,5 +220,28 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
     private void setNavigationViewListner() {
         NavigationView navigationView = findViewById(R.id.nav_view_tour_offres);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void getOffres() {
+        Call<List<Offre>> call = service.getAllOffres();
+        call.enqueue(new Callback<List<Offre>>() {
+            @Override
+            public void onResponse(Call<List<Offre>> call, Response<List<Offre>> response) {
+                if (response.isSuccessful()) {
+                    list_offres = response.body();
+
+                   // Log.d("resultat:", offres.get(0).getTitre_offre());
+                    if (list_offres.size()<1) {
+                        Toast.makeText(OffresActivity.this, "Aucun offre à afficher", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(OffresActivity.this, "Une erreur s'est produite lors de chargement des données!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(OffresActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

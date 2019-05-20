@@ -20,10 +20,12 @@ import android.widget.ImageView;
 import com.halgo.municipalpfe.adapters.ContratAdapter;
 import com.halgo.municipalpfe.adapters.PayementAdapter;
 import com.halgo.municipalpfe.modals.Contrat;
+import com.halgo.municipalpfe.modals.Etat;
 import com.halgo.municipalpfe.modals.Payement;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class PayementClientActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -71,7 +73,8 @@ public class PayementClientActivity extends AppCompatActivity implements Navigat
         }
 
 
-       // this.payements.add(new Payement(LocalDate.of(2018,02,02),LocalDate.of(2018,02,02), "Payé"));
+        this.payements.add(new Payement(LocalDate.now(),LocalDate.now(), "Paye"));
+
         //this.payements.add(new Payement(LocalDate.of(2018,02,02),LocalDate.of(2018,02,02), "Payé"));
         //this.payements.add(new Payement(LocalDate.of(2018,02,02),LocalDate.of(2018,02,02), "Payé"));
 
@@ -81,6 +84,7 @@ public class PayementClientActivity extends AppCompatActivity implements Navigat
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 startActivity(new Intent(PayementClientActivity.this, NotificationsActivity.class));
             }
         });

@@ -11,17 +11,17 @@ import android.widget.TextView;
 
 import com.halgo.municipalpfe.DetailsPropertieActivity;
 import com.halgo.municipalpfe.R;
-import com.halgo.municipalpfe.modals.Propertie;
+import com.halgo.municipalpfe.modals.Propriete;
 
 import java.util.List;
 
 public class PropertiesAdapter extends RecyclerView.Adapter<PropertiesAdapter.MyViewHolder>{
 
-private List<Propertie> properties;
+private List<Propriete> properties;
 private Context mContext;
 
 
-public PropertiesAdapter(Context context, List<Propertie> mpropeties) {
+public PropertiesAdapter(Context context, List<Propriete> mpropeties) {
         properties = mpropeties;
         mContext = context;
         }
@@ -40,7 +40,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
-    public PropertiesAdapter(List<Propertie> properties) {
+    public PropertiesAdapter(List<Propriete> properties) {
         this.properties = properties;
     }
 
@@ -53,9 +53,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
 
     @Override
     public void onBindViewHolder(PropertiesAdapter.MyViewHolder holder, int position) {
-        Propertie propertie = properties.get(position);
-        holder.adresse.setText(propertie.getAdresse());
-        holder.type.setText(propertie.getType());
+        Propriete propriete = properties.get(position);
+        holder.adresse.setText(propriete.getAdresse());
+        holder.type.setText(propriete.getType().toString());
 
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {

@@ -24,6 +24,7 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
         private ImageView notification_icon;
         private ImageView help_icon;
         private ImageView logout_icon;
+        private ImageView profile_icon;
         private DrawerLayout mDrawerlayout;
         private ActionBarDrawerToggle mToggle;
         private ImageButton delete_btn;
@@ -49,6 +50,7 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                 notification_icon = findViewById(R.id.notification_details_offre);
                 help_icon = findViewById(R.id.help_details_offre);
                 logout_icon = findViewById(R.id.logout_details_offre);
+                profile_icon =findViewById(R.id.user_details_offre);
                 mDrawerlayout = findViewById(R.id.draw_details_offre);
                 delete_btn = findViewById(R.id.delete_offre_btn);
                 update_btn = findViewById(R.id.update_offre_btn);
@@ -83,6 +85,13 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                         @Override
                         public void onClick(View view) {
                                 startActivity(new Intent(DetailsOffreActivity.this, HelpActivity.class));
+                        }
+                });
+
+                profile_icon.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                                startActivity(new Intent(DetailsOffreActivity.this, ProfileActivity.class));
                         }
                 });
 

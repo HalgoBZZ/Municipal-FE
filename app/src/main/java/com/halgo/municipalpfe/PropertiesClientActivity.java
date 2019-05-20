@@ -3,7 +3,6 @@ package com.halgo.municipalpfe;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +18,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.halgo.municipalpfe.adapters.PropertiesAdapter;
-import com.halgo.municipalpfe.modals.Propertie;
+import com.halgo.municipalpfe.modals.Propriete;
+import com.halgo.municipalpfe.modals.Type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class PropertiesClientActivity extends AppCompatActivity implements Navig
     private RecyclerView recyclerView;
     private PropertiesAdapter mAdapter;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
-    private List<Propertie> properties = new ArrayList<>();
+    private List<Propriete> properties = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +67,9 @@ public class PropertiesClientActivity extends AppCompatActivity implements Navig
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        this.properties.add(new Propertie(12, "adresse1", "restornat"));
-        this.properties.add(new Propertie(12, "adresse1", "restornat"));
-        this.properties.add(new Propertie(12, "adresse1", "restornat"));
-        this.properties.add(new Propertie(12, "adresse1", "restornat"));
+        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
+        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
+        this.properties.add(new Propriete(12, "adresse1", Type.Boutique));
 
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
