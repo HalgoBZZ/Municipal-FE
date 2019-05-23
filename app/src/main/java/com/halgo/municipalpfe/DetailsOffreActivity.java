@@ -11,12 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.halgo.municipalpfe.api.ApiOffre;
+import com.halgo.municipalpfe.api.ApiUtils;
+import com.halgo.municipalpfe.modals.Client;
+import com.halgo.municipalpfe.modals.Contrat;
+import com.halgo.municipalpfe.modals.Offre;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailsOffreActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -36,6 +49,10 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
         private TextView ajout;
         private TextView modification;
         private boolean isOpen;
+        private TextView connectedUser_name;
+        private Client connectedUser;
+        private Offre offre;
+        private ApiOffre service;
         //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
 
 
@@ -60,9 +77,36 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                 prix = findViewById(R.id.prix_details_offre);
                 ajout = findViewById(R.id.ajout_details_offre);
                 modification = findViewById(R.id.modification_details_offre);
+                connectedUser_name = findViewById(R.id.connected_user_details_offre);
+
+                service = service = ApiUtils.getOffreService();
+
+                connectedUser = (Client)getIntent().getSerializableExtra("connectedUser");
+                connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
 
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
+                offre = (Offre)getIntent().getSerializableExtra("offre");
+
+                if(!isNullOrEmpty(offre.getTitre_offre())){
+                        titre.setText(offre.getTitre_offre());
+                }
+                if(!isNullOrEmpty(offre.getDescription_offre())){
+                        description.setText(offre.getDescription_offre());
+                }
+
+                etat.setText(offre.getEtat().toString());
+                if(offre.getPrix_offre()>0){
+                        prix.setText("Prix: "+offre.getPrix_offre());
+                }
+
+                if(!isNullOrEmpty(offre.getDate_ajout())){
+                        ajout.setText("Ajouté le: "+offre.getDate_ajout());
+                }
+
+                if(!isNullOrEmpty(offre.getDate_modification())){
+                        ajout.setText("Modifié le: "+offre.getDate_modification());
+                }
 
                 NavigationView navigationView = findViewById(R.id.nav_view_details_offre);
                 navigationView.setNavigationItemSelectedListener(this);
@@ -77,21 +121,30 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                 notification_icon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                                startActivity(new Intent(DetailsOffreActivity.this, NotificationsActivity.class));
+                                Intent intent = new Intent(DetailsOffreActivity.this, NotificationsActivity.class);
+                                intent.putExtra("connectedUser", connectedUser);
+                                startActivity(intent);
+                                //startActivity(new Intent(DetailsOffreActivity.this, NotificationsActivity.class));
                         }
                 });
 
                 help_icon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                                startActivity(new Intent(DetailsOffreActivity.this, HelpActivity.class));
+                                Intent intent = new Intent(DetailsOffreActivity.this, HelpActivity.class);
+                                intent.putExtra("connectedUser", connectedUser);
+                                startActivity(intent);
+                               // startActivity(new Intent(DetailsOffreActivity.this, HelpActivity.class));
                         }
                 });
 
                 profile_icon.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                                startActivity(new Intent(DetailsOffreActivity.this, ProfileActivity.class));
+                                Intent intent = new Intent(DetailsOffreActivity.this, ProfileActivity.class);
+                                intent.putExtra("connectedUser", connectedUser);
+                                startActivity(intent);
+                                //startActivity(new Intent(DetailsOffreActivity.this, ProfileActivity.class));
                         }
                 });
 
@@ -115,6 +168,42 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                                 }
                         }
                 });
+
+                delete_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                                Log.i("id: ", offre.getId_offre()+"");
+                                Call<Void> deleteRequest = service.deleteOffre(offre.getId_offre());
+                                deleteRequest.enqueue(new Callback<Void>() {
+                                        @Override
+                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                                Toast.makeText(DetailsOffreActivity.this, "Opération effectué avec succés!", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(DetailsOffreActivity.this, OffresActivity.class);
+                                                intent.putExtra("connectedUser", connectedUser);
+                                                startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Void> call, Throwable t) {
+                                                Toast.makeText(DetailsOffreActivity.this, "Une erreur s'est produite lors de suppression!", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                });
+
+
+
+                        }
+                });
+                update_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                                Intent intent = new Intent(DetailsOffreActivity.this, NewOffre.class);
+                                intent.putExtra("connectedUser", connectedUser);
+                                intent.putExtra("action", "update");
+                                intent.putExtra("offre", offre);
+                                startActivity(intent);
+                        }
+                });
         }
 
 
@@ -123,22 +212,40 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
                 int id = item.getItemId();
                 switch (item.getItemId()) {
                         case R.id.client_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, Clients.class));
+                                Intent intent = new Intent(DetailsOffreActivity.this, Clients.class);
+                                intent.putExtra("connectedUser", connectedUser);
+                                startActivity(intent);
+                                //startActivity(new Intent(DetailsOffreActivity.this, Clients.class));
                                 break;
                         case R.id.properties_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, PropertiesActivity.class));
+                                Intent intent1 = new Intent(DetailsOffreActivity.this, PropertiesActivity.class);
+                                intent1.putExtra("connectedUser", connectedUser);
+                                startActivity(intent1);
+                               // startActivity(new Intent(DetailsOffreActivity.this, PropertiesActivity.class));
                                 break;
                         case R.id.offres_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, OffresActivity.class));
+                                Intent intent2 = new Intent(DetailsOffreActivity.this, OffresActivity.class);
+                                intent2.putExtra("connectedUser", connectedUser);
+                                startActivity(intent2);
+                                //startActivity(new Intent(DetailsOffreActivity.this, OffresActivity.class));
                                 break;
                         case R.id.payements_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, Payements.class));
+                                Intent intent3 = new Intent(DetailsOffreActivity.this, Payements.class);
+                                intent3.putExtra("connectedUser", connectedUser);
+                                startActivity(intent3);
+                                //startActivity(new Intent(DetailsOffreActivity.this, Payements.class));
                                 break;
                         case R.id.contrats_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, Contrats.class));
+                                Intent intent4 = new Intent(DetailsOffreActivity.this, Contrats.class);
+                                intent4.putExtra("connectedUser", connectedUser);
+                                startActivity(intent4);
+                                //(new Intent(DetailsOffreActivity.this, Contrats.class));
                                 break;
                         case R.id.configs_admin:
-                                startActivity(new Intent(DetailsOffreActivity.this, Configurations.class));
+                                Intent intent5 = new Intent(DetailsOffreActivity.this, Configurations.class);
+                                intent5.putExtra("connectedUser", connectedUser);
+                                startActivity(intent5);
+                                //startActivity(new Intent(DetailsOffreActivity.this, Configurations.class));
                                 break;
                         default:
                                 break;
@@ -150,6 +257,12 @@ public class DetailsOffreActivity  extends AppCompatActivity implements Navigati
         private void setNavigationViewListner() {
                 NavigationView navigationView = findViewById(R.id.nav_view_details_offre);
                 navigationView.setNavigationItemSelectedListener(this);
+        }
+
+        public static boolean isNullOrEmpty(String str) {
+                if(str != null && !str.isEmpty())
+                        return false;
+                return true;
         }
 }
 

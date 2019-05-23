@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.halgo.municipalpfe.DetailsContratActivity;
 import com.halgo.municipalpfe.R;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Contrat;
 
 
@@ -20,6 +21,7 @@ public class ContratAdapter extends RecyclerView.Adapter<ContratAdapter.MyViewHo
 
 private List<Contrat> contrats;
 private Context mContext;
+private Client connectedUser;
 
 
 public ContratAdapter(Context context, List<Contrat> mContrats) {
@@ -41,8 +43,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
-    public ContratAdapter(List<Contrat> contrats) {
+    public ContratAdapter(List<Contrat> contrats, Client connectedUser) {
         this.contrats = contrats;
+        this.connectedUser = connectedUser;
     }
 
     @Override
@@ -54,7 +57,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
 
     @Override
     public void onBindViewHolder(ContratAdapter.MyViewHolder holder, int position) {
-        Contrat contrat = contrats.get(position);
+        final Contrat contrat = contrats.get(position);
         holder.titre.setText(contrat.getTitre_contrat());
         holder.prix.setText(""+contrat.getPrix());
 
@@ -63,6 +66,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailsContratActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("contrat", contrat);
                 mContext.startActivity(intent);
             }
         });

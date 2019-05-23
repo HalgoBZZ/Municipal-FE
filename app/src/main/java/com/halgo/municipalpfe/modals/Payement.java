@@ -10,15 +10,15 @@ public class Payement implements Serializable {
 
     private Long id;
 
-    private LocalDate date_debut;
+    private String date_debut;
 
-    private LocalDate date_fin;
+    private String date_fin;
 
     private String etat;
 
-    private LocalDate date_ajout;
+    private String date_ajout;
 
-    private LocalDate date_modification;
+    private String date_modification;
 
     private List<Avertissement> avertissements = new ArrayList<>();
 
@@ -35,7 +35,7 @@ public class Payement implements Serializable {
 
     }
 
-    public Payement(Long id, LocalDate date_debut, LocalDate date_fin, String etat, LocalDate date_ajout, LocalDate date_modification) {
+    public Payement(Long id, String date_debut, String date_fin, String etat, String date_ajout, String date_modification) {
         super();
         this.id = id;
         this.date_debut = date_debut;
@@ -55,19 +55,19 @@ public class Payement implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDate_debut() {
+    public String getDate_debut() {
         return date_debut;
     }
 
-    public void setDate_debut(LocalDate date_debut) {
+    public void setDate_debut(String date_debut) {
         this.date_debut = date_debut;
     }
 
-    public LocalDate getDate_fin() {
+    public String getDate_fin() {
         return date_fin;
     }
 
-    public void setDate_fin(LocalDate date_fin) {
+    public void setDate_fin(String date_fin) {
         this.date_fin = date_fin;
     }
 
@@ -79,19 +79,19 @@ public class Payement implements Serializable {
         this.etat = etat;
     }
 
-    public LocalDate getDate_ajout() {
+    public String getDate_ajout() {
         return date_ajout;
     }
 
-    public void setDate_ajout(LocalDate date_ajout) {
+    public void setDate_ajout(String date_ajout) {
         this.date_ajout = date_ajout;
     }
 
-    public LocalDate getDate_modification() {
+    public String getDate_modification() {
         return date_modification;
     }
 
-    public void setDate_modification(LocalDate date_modification) {
+    public void setDate_modification(String date_modification) {
         this.date_modification = date_modification;
     }
 

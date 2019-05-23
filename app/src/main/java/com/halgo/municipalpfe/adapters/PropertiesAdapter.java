@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.halgo.municipalpfe.DetailsPropertieActivity;
 import com.halgo.municipalpfe.R;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Propriete;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class PropertiesAdapter extends RecyclerView.Adapter<PropertiesAdapter.My
 
 private List<Propriete> properties;
 private Context mContext;
+    private Client connectedUser;
 
 
 public PropertiesAdapter(Context context, List<Propriete> mpropeties) {
@@ -40,8 +42,9 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
     }
 
 }
-    public PropertiesAdapter(List<Propriete> properties) {
-        this.properties = properties;
+    public PropertiesAdapter(List<Propriete> properties, Client connectedUser) {
+    this.connectedUser = connectedUser;
+    this.properties = properties;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
 
     @Override
     public void onBindViewHolder(PropertiesAdapter.MyViewHolder holder, int position) {
-        Propriete propriete = properties.get(position);
+        final Propriete propriete = properties.get(position);
         holder.adresse.setText(propriete.getAdresse());
         holder.type.setText(propriete.getType().toString());
 
@@ -62,6 +65,8 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailsPropertieActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("propertie", propriete);
                 mContext.startActivity(intent);
             }
         });

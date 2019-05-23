@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.halgo.municipalpfe.adapters.PropertiesAdapter;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Propriete;
 import com.halgo.municipalpfe.modals.Type;
 
@@ -35,6 +36,7 @@ public class PropertiesClientActivity extends AppCompatActivity implements Navig
     private boolean isOpen;
     private RecyclerView recyclerView;
     private PropertiesAdapter mAdapter;
+    private Client connectedUser;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
     private List<Propriete> properties = new ArrayList<>();
 
@@ -51,7 +53,7 @@ public class PropertiesClientActivity extends AppCompatActivity implements Navig
         logout_icon = findViewById(R.id.logout_properties_client);
         mDrawerlayout = findViewById(R.id.draw_properties_client);
         recyclerView = findViewById(R.id.recycler_view_properties_client);
-        mAdapter = new PropertiesAdapter(properties);
+        mAdapter = new PropertiesAdapter(properties, connectedUser);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));

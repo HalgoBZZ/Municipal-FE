@@ -10,12 +10,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.halgo.municipalpfe.api.ApiPropriete;
+import com.halgo.municipalpfe.api.ApiUtils;
+import com.halgo.municipalpfe.modals.Client;
+import com.halgo.municipalpfe.modals.Contrat;
+import com.halgo.municipalpfe.modals.Propriete;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailsPropertieActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,7 +47,12 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
     private TextView ajout;
     private TextView modification;
     private boolean isOpen;
-    //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
+    private Propriete propriete;
+    private Client connectedUser;
+    private TextView connectedUser_name;
+    private ApiPropriete service;
+
+
 
 
     @Override
@@ -57,10 +75,31 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
         type = findViewById(R.id.type_details_propertie);
         ajout = findViewById(R.id.ajout_details_propertie);
         modification = findViewById(R.id.modification_details_propertie);
+        connectedUser_name = findViewById(R.id.connected_user_details_propertie);
 
+        service = ApiUtils.getProprieteService();
+
+        connectedUser = (Client)getIntent().getSerializableExtra("connectedUser");
+        connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
+        propriete = (Propriete) getIntent().getSerializableExtra("propertie");
 
+        if(!isNullOrEmpty(propriete.getAdresse())){
+            adresse.setText("Adresse: "+propriete.getAdresse());
+        }
+        if(propriete.getSurface_prop()>0){
+            surface.setText("Surface: "+propriete.getSurface_prop()+" m²");
+        }
+        if(!isNullOrEmpty(propriete.getType())){
+            type.setText("Type: "+propriete.getType());
+        }
+        if(!isNullOrEmpty(propriete.getDate_ajout())){
+            adresse.setText("Ajouté le: "+propriete.getDate_ajout());
+        }
+        if(!isNullOrEmpty(propriete.getAdresse())){
+            adresse.setText("Modifié le: "+propriete.getDate_modification());
+        }
 
         NavigationView navigationView = findViewById(R.id.nav_view_details_propertie);
         navigationView.setNavigationItemSelectedListener(this);
@@ -78,28 +117,30 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, NotificationsActivity.class));
+                Intent intent = new Intent(DetailsPropertieActivity.this, NotificationsActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, HelpActivity.class));
-            }
-        });
-
-        logout_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, MainActivity.class));
+                Intent intent = new Intent(DetailsPropertieActivity.this, HelpActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, HelpActivity.class));
             }
         });
 
         profile_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsPropertieActivity.this, ProfileActivity.class));
+                Intent intent = new Intent(DetailsPropertieActivity.this, ProfileActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, ProfileActivity.class));
             }
         });
 
@@ -116,7 +157,42 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
                 }
             }
         });
+
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Call<Void> deleteRequest = service.deletePropriete(propriete.getId_prop());
+                deleteRequest.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Toast.makeText(DetailsPropertieActivity.this, "Opération effectué avec succés!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(DetailsPropertieActivity.this, PropertiesActivity.class);
+                        intent.putExtra("connectedUser", connectedUser);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(DetailsPropertieActivity.this, "Une erreur s'est produite lors de suppression!", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
+            }
+        });
+        update_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsPropertieActivity.this, NewPropertie.class);
+                intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "update");
+                intent.putExtra("propriete", propriete);
+                startActivity(intent);
+            }
+        });
     }
+
 
 
 
@@ -124,17 +200,41 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (item.getItemId()) {
-            case R.id.properties_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, PropertiesClientActivity.class));
+            case R.id.client_admin:
+                Intent intent = new Intent(DetailsPropertieActivity.this, Clients.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, Clients.class));
                 break;
-            case R.id.offres_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, OffreClientActivity.class));
+            case R.id.properties_admin:
+                Intent intent1 = new Intent(DetailsPropertieActivity.this, PropertiesActivity.class);
+                intent1.putExtra("connectedUser", connectedUser);
+                startActivity(intent1);
+                //startActivity(new Intent(DetailsContratActivity.this, PropertiesActivity.class));
                 break;
-            case R.id.payements_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, PayementClientActivity.class));
+            case R.id.offres_admin:
+                Intent intent2 = new Intent(DetailsPropertieActivity.this, OffresActivity.class);
+                intent2.putExtra("connectedUser", connectedUser);
+                startActivity(intent2);
+                // startActivity(new Intent(DetailsContratActivity.this, OffresActivity.class));
                 break;
-            case R.id.contrats_client:
-                startActivity(new Intent(DetailsPropertieActivity.this, ContratsClientActivity.class));
+            case R.id.payements_admin:
+                Intent intent3 = new Intent(DetailsPropertieActivity.this, Payements.class);
+                intent3.putExtra("connectedUser", connectedUser);
+                startActivity(intent3);
+                //startActivity(new Intent(DetailsContratActivity.this, Payements.class));
+                break;
+            case R.id.contrats_admin:
+                Intent intent4 = new Intent(DetailsPropertieActivity.this, Contrats.class);
+                intent4.putExtra("connectedUser", connectedUser);
+                startActivity(intent4);
+                //startActivity(new Intent(DetailsPropertieActivity.this, Contrats.class));
+                break;
+            case R.id.configs_admin:
+                Intent intent5 = new Intent(DetailsPropertieActivity.this, Configurations.class);
+                intent5.putExtra("connectedUser", connectedUser);
+                startActivity(intent5);
+                //startActivity(new Intent(DetailsContratActivity.this, Configurations.class));
                 break;
             default:
                 break;
@@ -146,6 +246,12 @@ public class DetailsPropertieActivity extends AppCompatActivity implements Navig
     private void setNavigationViewListner() {
         NavigationView navigationView = findViewById(R.id.nav_view_details_propertie);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public static boolean isNullOrEmpty(String str) {
+        if(str != null && !str.isEmpty())
+            return false;
+        return true;
     }
 
 }

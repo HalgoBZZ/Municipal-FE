@@ -22,6 +22,7 @@ public class ClientAdapter extends  RecyclerView.Adapter<ClientAdapter.MyViewHol
 
     private List<Client> clients;
     private Context mContext;
+    private Client connectedUser;
 
 
     public ClientAdapter(Context context, List<Client> mClients) {
@@ -42,7 +43,10 @@ public class ClientAdapter extends  RecyclerView.Adapter<ClientAdapter.MyViewHol
 
     }
     public ClientAdapter(List<Client> clients) {
+        connectedUser = clients.get(clients.size()-1);
+        clients.remove(clients.get(clients.size()-1));
         this.clients = clients;
+       //     this.clients.remove(this.clients.get(this.clients.indexOf(connectedUser)));
     }
 
     @Override
@@ -54,7 +58,7 @@ public class ClientAdapter extends  RecyclerView.Adapter<ClientAdapter.MyViewHol
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Client client = clients.get(position);
+        final Client client = clients.get(position);
         holder.nom_prenom.setText(client.getNom_client()+" "+client.getPrenom_client());
 
 
@@ -62,6 +66,8 @@ public class ClientAdapter extends  RecyclerView.Adapter<ClientAdapter.MyViewHol
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailsClientActivity.class);
+                intent.putExtra("client", client);
+                intent.putExtra("connectedUser", connectedUser);
                 mContext.startActivity(intent);
             }
         });

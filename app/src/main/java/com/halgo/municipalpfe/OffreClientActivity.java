@@ -66,13 +66,36 @@ public class OffreClientActivity extends AppCompatActivity implements Navigation
         connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
         mDrawerlayout = findViewById(R.id.draw_offres_client);
         recyclerView = findViewById(R.id.recycler_view_offres_client);
-        mAdapter = new OffreAdapter(offres);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //mAdapter = new OffreAdapter(offres, connectedUser);
+        Call<List<Offre>> call = service.getAllOffres();
+        call.enqueue(new Callback<List<Offre>>() {
+            @Override
+            public void onResponse(Call<List<Offre>> call, Response<List<Offre>> response) {
+                if (response.isSuccessful()) {
+                    offres = response.body();
+                    mAdapter = new OffreAdapter(offres, connectedUser);
+                    recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    recyclerView.setAdapter(mAdapter);
 
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+                    if (offres.size()<1) {
+                        Toast.makeText(OffreClientActivity.this, "Aucun offre à afficher", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(OffreClientActivity.this, "Une erreur s'est produite lors de chargement des données!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call call, Throwable t) {
+                Toast.makeText(OffreClientActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //recyclerView.setAdapter(mAdapter);
         NavigationView navigationView = findViewById(R.id.nav_view_offres_client);
         navigationView.setNavigationItemSelectedListener(this);
         mToggle = new ActionBarDrawerToggle(this, mDrawerlayout, R.string.open, R.string.close);

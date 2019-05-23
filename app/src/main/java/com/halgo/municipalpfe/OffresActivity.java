@@ -88,7 +88,7 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             public void onResponse(Call<List<Offre>> call, Response<List<Offre>> response) {
                 if (response.isSuccessful()) {
                     list_offres = response.body();
-                    mAdapter = new OffreAdapter(list_offres);
+                    mAdapter = new OffreAdapter(list_offres, connectedUser);
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
                     recyclerView.setAdapter(mAdapter);
 
@@ -119,6 +119,7 @@ public class OffresActivity extends AppCompatActivity implements NavigationView.
             public void onClick(View view) {
                 Intent intent = new Intent(OffresActivity.this, NewOffre.class);
                 intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "create");
                 startActivity(intent);
             }
         });

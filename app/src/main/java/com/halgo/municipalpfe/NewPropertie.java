@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -126,42 +127,87 @@ public class NewPropertie extends AppCompatActivity implements NavigationView.On
         });
 
 
+        String action = getIntent().getExtras().getString("action");
+        if (action.equals("create")) {
 
-        ajouter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                surface = Double.parseDouble(surface_field.getText().toString().trim());
-                adresse = adresse_field.getText().toString().trim();
-                type =String.valueOf(type_field.getSelectedItem());
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    surface = Double.parseDouble(surface_field.getText().toString().trim());
+                    adresse = adresse_field.getText().toString().trim();
+                    type = String.valueOf(type_field.getSelectedItem());
 
-                if (surface_field.getText().toString().trim().isEmpty()) {
-                    surface_field.setError("Champ obligatoire!");
-                    surface_field.requestFocus();
-                } else if (adresse.isEmpty()) {
-                    adresse_field.setError("Champ obligatoire!");
-                    adresse_field.requestFocus();
-                } else {
+                    if (surface_field.getText().toString().trim().isEmpty()) {
+                        surface_field.setError("Champ obligatoire!");
+                        surface_field.requestFocus();
+                    } else if (adresse.isEmpty()) {
+                        adresse_field.setError("Champ obligatoire!");
+                        adresse_field.requestFocus();
+                    } else {
 
-                    Propriete propriete = new Propriete();
-                    propriete.setAdresse(adresse);
-                    propriete.setSurface_prop(surface);
-                    if (type.equals("Boutique")) {
-                        propriete.setType("Boutique");
-                    } else if(type.equals("Jardin publique")){
-                        propriete.setType("Jardin_publique");
-                    }else if(type.equals("Magasin industiel")){
-                        propriete.setType("magasin_industriel");
-                    }else if(type.equals("Parc")){
-                        propriete.setType("parc");
-                    } else{
-                        propriete.setType("terrain");
+                        Propriete propriete = new Propriete();
+                        propriete.setAdresse(adresse);
+                        propriete.setSurface_prop(surface);
+                        if (type.equals("Boutique")) {
+                            propriete.setType("Boutique");
+                        } else if (type.equals("Jardin publique")) {
+                            propriete.setType("Jardin_publique");
+                        } else if (type.equals("Magasin industiel")) {
+                            propriete.setType("magasin_industriel");
+                        } else if (type.equals("Parc")) {
+                            propriete.setType("parc");
+                        } else {
+                            propriete.setType("terrain");
+                        }
+                        savePropriete(propriete);
+
                     }
-                    savePropriete(propriete);
 
                 }
+            });
+        } else {
+            ajouter.setText("Modifer");
+            final Propriete propriete1 = (Propriete) getIntent().getSerializableExtra("propriete");
+            surface_field.setText(propriete1.getSurface_prop()+"");
+            adresse_field.setText(propriete1.getAdresse());
 
-            }
-        });
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    surface = Double.parseDouble(surface_field.getText().toString().trim());
+                    adresse = adresse_field.getText().toString().trim();
+                    type = String.valueOf(type_field.getSelectedItem());
+
+                    if (surface_field.getText().toString().trim().isEmpty()) {
+                        surface_field.setError("Champ obligatoire!");
+                        surface_field.requestFocus();
+                    } else if (adresse.isEmpty()) {
+                        adresse_field.setError("Champ obligatoire!");
+                        adresse_field.requestFocus();
+                    } else {
+
+                        Propriete propriete = new Propriete();
+                        propriete.setAdresse(adresse);
+                        propriete.setSurface_prop(surface);
+                        if (type.equals("Boutique")) {
+                            propriete.setType("Boutique");
+                        } else if (type.equals("Jardin publique")) {
+                            propriete.setType("Jardin_publique");
+                        } else if (type.equals("Magasin industiel")) {
+                            propriete.setType("magasin_industriel");
+                        } else if (type.equals("Parc")) {
+                            propriete.setType("parc");
+                        } else {
+                            propriete.setType("terrain");
+                        }
+                        propriete.setId_prop(propriete1.getId_prop());
+                        updatePropriete(propriete);
+
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -216,6 +262,24 @@ public class NewPropertie extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Toast.makeText(NewPropertie.this, "Proprieté ajouté avec succés", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NewPropertie.this, PropertiesActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(NewPropertie.this, "Une erreur s'est produite lors d'envoi des données", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updatePropriete(Propriete propriete) {
+        Call<ResponseBody> call = service.updatePropriete(propriete);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(NewPropertie.this, "Proprieté modifié avec succés", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewPropertie.this, PropertiesActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);

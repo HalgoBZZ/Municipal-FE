@@ -12,4 +12,8 @@
             <item>Parc</item>
             <item>Terrain</item>
         </string-array>
+    <string-array name="payements_array">
+        <item>Payé</item>
+        <item>Non Payé</item>
+    </string-array>
 </resources>

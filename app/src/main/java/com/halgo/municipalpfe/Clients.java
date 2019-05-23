@@ -23,13 +23,10 @@ import android.widget.Toast;
 import com.halgo.municipalpfe.adapters.ClientAdapter;
 
 import com.halgo.municipalpfe.api.ApiClientInterface;
-import com.halgo.municipalpfe.api.ApiPropriete;
 import com.halgo.municipalpfe.api.ApiUtils;
 import com.halgo.municipalpfe.modals.Client;
-import com.halgo.municipalpfe.modals.Propriete;
 
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +75,8 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
         connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
 
 
+
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -88,6 +87,10 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
                 if (response.isSuccessful()) {
                     list_clients = response.body();
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
+                    if(list_clients.indexOf(connectedUser)>-1) {
+                        list_clients.remove(list_clients.get(list_clients.indexOf(connectedUser)));
+                    }
+                    list_clients.add(connectedUser);
                     mAdapter = new ClientAdapter(list_clients);
                     recyclerView.setAdapter(mAdapter);
                     //Log.d("resultat:", client.getId().toString());
@@ -120,6 +123,8 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
             public void onClick(View view) {
                 Intent intent = new Intent(Clients.this, NewClient.class);
                 intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "create");
+
                 startActivity(intent);
 
             }
@@ -131,7 +136,6 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
                 Intent intent = new Intent(Clients.this, NotificationsActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
-                //startActivity(new Intent(Clients.this, NotificationsActivity.class));
             }
         });
 
@@ -141,7 +145,6 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
                 Intent intent = new Intent(Clients.this, HelpActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
-                //startActivity(new Intent(Clients.this, HelpActivity.class));
             }
         });
 
@@ -151,7 +154,6 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
                 Intent intent = new Intent(Clients.this, MainActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
-                //startActivity(new Intent(Clients.this, MainActivity.class));
             }
         });
 
@@ -161,7 +163,6 @@ public class Clients extends AppCompatActivity implements NavigationView.OnNavig
                 Intent intent = new Intent(Clients.this, ProfileActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
-                //startActivity(new Intent(Clients.this, ProfileActivity.class));
             }
         });
 

@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +16,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.halgo.municipalpfe.api.ApiClientInterface;
 import com.halgo.municipalpfe.api.ApiOffre;
+import com.halgo.municipalpfe.api.ApiUtils;
 import com.halgo.municipalpfe.modals.Client;
+
+import java.time.LocalDate;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,6 +45,15 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private EditText cin_field;
     private EditText email_field;
     private EditText pwd_field;
+    private ApiClientInterface service;
+    private Button ajouter;
+    private String nom;
+    private String prenom;
+    private int cin = 0;
+    private LocalDate naissance;
+    private String email;
+    private String pwd;
+    private String action;
 
 
     private Client connectedUser;
@@ -51,6 +71,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         email_field = findViewById(R.id.email_profil);
         naissance_field = findViewById(R.id.date_naiss_profil);
         pwd_field = findViewById(R.id.pwd_profil);
+        ajouter = findViewById(R.id.btn_profil);
 
 
         mDrawerlayout = findViewById(R.id.draw_profil);
@@ -63,6 +84,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
         connectedUser = (Client) getIntent().getSerializableExtra("connectedUser");
         connectedUser_name.setText(connectedUser.getNom_client() + " " + connectedUser.getPrenom_client() + " ");
+        service = ApiUtils.getUserService();
 
         nom_field.setText(connectedUser.getNom_client());
         prenom_field.setText(connectedUser.getPrenom_client());
@@ -107,6 +129,56 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                     mDrawerlayout.closeDrawer(Gravity.START);
                     isOpen = false;
                 }
+            }
+        });
+
+        ajouter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nom = nom_field.getText().toString().trim();
+                prenom = prenom_field.getText().toString().trim();
+                email = email_field.getText().toString().trim();
+                pwd = pwd_field.getText().toString().trim();
+
+                if (nom.isEmpty()) {
+                    nom_field.setError("Champ obligatoire!");
+                    nom_field.requestFocus();
+                } else if (prenom.isEmpty()) {
+                    prenom_field.setError("Champ obligatoire!");
+                    prenom_field.requestFocus();
+                } else if (cin < 0 || (cin_field.getText().toString().trim()).length() != 8) {
+                    cin_field.setError("Format CIN incorrecte");
+                    cin_field.requestFocus();
+                } else if (email.isEmpty()) {
+                    email_field.setError("Champ obligatoire!");
+                    email_field.requestFocus();
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    email_field.setError("Adresse email invalide!");
+                    email_field.requestFocus();
+                } else if (naissance_field.getText().toString().trim().isEmpty()) {
+                    naissance_field.setError("Champ Obligatoire!");
+                    naissance_field.requestFocus();
+                } else if (pwd.isEmpty()) {
+                    pwd_field.setError("Champ obligatoire!");
+                    pwd_field.requestFocus();
+                } else if (pwd.length() < 6) {
+                    pwd_field.setError("Mot de passe trés courte!");
+                    pwd_field.requestFocus();
+                } else {
+                    cin = Integer.parseInt(cin_field.getText().toString().trim());
+                    naissance = LocalDate.parse(naissance_field.getText().toString().trim());
+                    Client client = new Client();
+                    client.setNom_client(nom);
+                    client.setPrenom_client(prenom);
+                    client.setCin(cin);
+                    client.setEmail(email);
+                    client.setPwd(pwd);
+                    client.setDate_naissance(naissance_field.getText().toString().trim());
+                    client.setId_compte(connectedUser.getId_compte());
+                    updateClient(client);
+
+                }
+
             }
         });
 
@@ -157,6 +229,22 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     private void setNavigationViewListner() {
         NavigationView navigationView = findViewById(R.id.nav_view_profil);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void updateClient(Client client) {
+        Call<ResponseBody> call = service.updateClient(client);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(ProfileActivity.this, "Votre profil est mis à jour avec succés", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "Une erreur s'est produite lors d'envoi des données", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

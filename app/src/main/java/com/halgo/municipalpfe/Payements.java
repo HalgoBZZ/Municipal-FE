@@ -49,6 +49,7 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
     private ImageView profile_icon;
     private DrawerLayout mDrawerlayout;
     private ActionBarDrawerToggle mToggle;
+    private FloatingActionButton add_button;
     private int payed = 0;
     private boolean isOpen;
     List<Payement> payements = new ArrayList<>();
@@ -70,6 +71,7 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
         logout_icon = findViewById(R.id.logout_payements);
         profile_icon = findViewById(R.id.user_payements);
         mDrawerlayout = findViewById(R.id.draw_payements);
+        add_button = findViewById(R.id.add_new_payement);
 
         connectedUser_name = findViewById(R.id.connected_user_payements);
         service = ApiUtils.getPayementService();
@@ -77,6 +79,15 @@ public class Payements extends AppCompatActivity implements NavigationView.OnNav
         connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
 
 
+        add_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Payements.this, NewPayement.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+
+            }
+        });
 
         Call<List<Payement>> call = service.getAllPayements();
         call.enqueue(new Callback<List<Payement>>() {

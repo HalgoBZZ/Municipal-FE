@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -20,7 +21,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_marginTop="10dp"
-                    android:id="@+id/photoprofil_payements"
+                    android:id="@+id/photoprofil_new_payement"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
@@ -34,7 +35,7 @@
                     android:textColor="#fff"
                     android:layout_marginTop="10dp"
                     android:layout_gravity="center"
-                    android:id="@+id/connected_user_payements"
+                    android:id="@+id/connected_user_new_payement"
                     android:textStyle="bold"/>
 
             </LinearLayout>
@@ -55,7 +56,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/menu_payements"
+                            android:id="@+id/menu_new_payement"
                             android:src="@drawable/ic_menus"/>
 
                     </LinearLayout>
@@ -66,7 +67,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/notification_payements"
+                            android:id="@+id/notification_new_payement"
                             android:src="@drawable/ic_notifications"/>
 
                     </LinearLayout>
@@ -77,7 +78,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/help_payements"
+                            android:id="@+id/help_new_payement"
                             android:src="@drawable/ic_help"/>
 
                     </LinearLayout>
@@ -88,7 +89,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/user_payements"
+                            android:id="@+id/user_new_payement"
                             android:src="@drawable/ic_person"/>
                     </LinearLayout>
                     <LinearLayout
@@ -98,7 +99,7 @@
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="match_parent"
-                            android:id="@+id/logout_payements"
+                            android:id="@+id/logout_new_payement"
                             android:src="@drawable/exit"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -109,28 +110,78 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:id="@+id/drawcontainer_payements">
-
+            android:id="@+id/drawcontainer_new_payement">
             <android.support.v4.widget.DrawerLayout
-                android:id="@+id/draw_payements"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="-10dp">
+                android:layout_marginTop="-10dp"
+                android:id="@+id/draw_new_payement"
+                >
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:id="@+id/recycler_view_new_payement"
+                        android:padding="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical"
+                        android:layout_marginTop="20dp"
+                        android:paddingLeft="15dp">
 
-                <lecho.lib.hellocharts.view.PieChartView
-                    android:id="@+id/chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                        <EditText
+                            android:id="@+id/debut_new_payement"
+                            android:hint="Date de debut(aaaa-mm-jj)"
+                            android:textColor="@color/title"
+                            android:textStyle="bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginBottom="20dp"/>
+                        <EditText
+                            android:id="@+id/fin_new_payement"
+                            android:layout_marginBottom="20dp"
+                            android:textColor="@color/title"
+                            android:textStyle="bold"
+                            android:hint="Date de fin(aaaa-mm-jj)"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/debut_new_payement"/>
 
+
+                        <Spinner
+                            android:id="@+id/etat_new_payement"
+                            android:textColor="@color/title"
+                            android:textStyle="bold"
+                            android:inputType="numberDecimal"
+                            android:layout_marginBottom="20dp"
+                            android:hint="Etat"
+                            android:entries="@array/payements_array"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/fin_new_payement"/>
+                        <Button
+                            android:id="@+id/btn_new_payement"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/colorBLGR"
+                            android:textColor="#fff"
+                            android:text="Ajouter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/etat_new_payement"/>
+
+                    </RelativeLayout>
+                </ScrollView>
                 <android.support.design.widget.NavigationView
-                    android:id="@+id/nav_view_payements"
+                    android:id="@+id/nav_view_new_payement"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="start"
                     android:background="@color/colorBLGR"
-                    android:paddingLeft="16dp"
                     app:itemTextColor="#FFFFFF"
-                    app:menu="@menu/drawermenu1">
+                    app:menu="@menu/drawermenu1"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="start">
 
                 </android.support.design.widget.NavigationView>
             </android.support.v4.widget.DrawerLayout>
@@ -141,13 +192,5 @@
 
 
     </LinearLayout>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_new_payement"
-        app:backgroundTint="@color/bluebrayfonced"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_add_black_24dp"
-        android:layout_margin="16dp" />
 
 </android.support.design.widget.CoordinatorLayout>

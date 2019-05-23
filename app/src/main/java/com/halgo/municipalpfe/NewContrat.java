@@ -24,6 +24,7 @@ import com.halgo.municipalpfe.api.ApiContrat;
 import com.halgo.municipalpfe.api.ApiUtils;
 import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Contrat;
+import com.halgo.municipalpfe.modals.Offre;
 
 import java.time.LocalDate;
 
@@ -129,40 +130,83 @@ public class NewContrat extends AppCompatActivity implements NavigationView.OnNa
         });
 
 
+        String action = getIntent().getExtras().getString("action");
+        if (action.equals("create")) {
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    titre = titre_field.getText().toString().trim();
+                    debut = debut_field.getText().toString().trim();
+                    fin = fin_field.getText().toString().trim();
+                    prix = Double.parseDouble(prix_field.getText().toString().trim());
 
-        ajouter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                titre = titre_field.getText().toString().trim();
-                debut = debut_field.getText().toString().trim();
-                fin = fin_field.getText().toString().trim();
-                prix = Double.parseDouble(prix_field.getText().toString().trim());
 
+                    if (titre.isEmpty()) {
+                        titre_field.setError("Champ obligatoire!");
+                        titre_field.requestFocus();
+                    } else if (debut.isEmpty()) {
+                        debut_field.setError("Champ obligatoire!");
+                        debut_field.requestFocus();
+                    } else if (fin.isEmpty()) {
+                        fin_field.setError("Champ obligatoire!");
+                        fin_field.requestFocus();
+                    } else if (prix_field.getText().toString().trim().isEmpty()) {
+                        prix_field.setError("Champ Obligatoire!");
+                        prix_field.requestFocus();
+                    } else {
+                        Contrat contrat = new Contrat();
+                        contrat.setTitre_contrat(titre);
+                        contrat.setDate_debut(debut);
+                        contrat.setDate_fin(fin);
+                        contrat.setPrix(prix);
+                        saveContrat(contrat);
 
-                if (titre.isEmpty()) {
-                    titre_field.setError("Champ obligatoire!");
-                    titre_field.requestFocus();
-                } else if (debut.isEmpty()) {
-                    debut_field.setError("Champ obligatoire!");
-                    debut_field.requestFocus();
-                }else if (fin.isEmpty()) {
-                    fin_field.setError("Champ obligatoire!");
-                    fin_field.requestFocus();
-                }else if (prix_field.getText().toString().trim().isEmpty()) {
-                    prix_field.setError("Champ Obligatoire!");
-                    prix_field.requestFocus();
-                } else {
-                    Contrat contrat = new Contrat();
-                    contrat.setTitre_contrat(titre);
-                    contrat.setDate_debut(debut);
-                    contrat.setDate_fin(fin);
-                    contrat.setPrix(prix);
-                    saveContrat(contrat);
+                    }
 
                 }
+            });
+        }else{
+            ajouter.setText("Modifier");
+            final Contrat contrat1 = (Contrat) getIntent().getSerializableExtra("contrat");
+            titre_field.setText(contrat1.getTitre_contrat());
+            debut_field.setText(contrat1.getDate_debut());
+            fin_field.setText(contrat1.getDate_fin());
+            prix_field.setText(contrat1.getPrix()+"");
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    titre = titre_field.getText().toString().trim();
+                    debut = debut_field.getText().toString().trim();
+                    fin = fin_field.getText().toString().trim();
+                    prix = Double.parseDouble(prix_field.getText().toString().trim());
 
-            }
-        });
+
+                    if (titre.isEmpty()) {
+                        titre_field.setError("Champ obligatoire!");
+                        titre_field.requestFocus();
+                    } else if (debut.isEmpty()) {
+                        debut_field.setError("Champ obligatoire!");
+                        debut_field.requestFocus();
+                    } else if (fin.isEmpty()) {
+                        fin_field.setError("Champ obligatoire!");
+                        fin_field.requestFocus();
+                    } else if (prix_field.getText().toString().trim().isEmpty()) {
+                        prix_field.setError("Champ Obligatoire!");
+                        prix_field.requestFocus();
+                    } else {
+                        Contrat contrat = new Contrat();
+                        contrat.setTitre_contrat(titre);
+                        contrat.setDate_debut(debut);
+                        contrat.setDate_fin(fin);
+                        contrat.setPrix(prix);
+                        contrat.setId_contrat(contrat1.getId_contrat());
+                        updateContrat(contrat);
+
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -213,6 +257,23 @@ public class NewContrat extends AppCompatActivity implements NavigationView.OnNa
 
     private void saveContrat(Contrat contrat) {
         Call<ResponseBody> call = service.saveContrat(contrat);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(NewContrat.this, "Contrat ajouté avec succés", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NewContrat.this, Contrats.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(NewContrat.this, "Une erreur s'est produite lors d'envoi des données", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateContrat(Contrat contrat) {
+        Call<ResponseBody> call = service.updateContrat(contrat);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

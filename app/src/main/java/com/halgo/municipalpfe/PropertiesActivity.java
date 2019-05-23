@@ -98,7 +98,7 @@ public class PropertiesActivity extends AppCompatActivity implements NavigationV
             public void onResponse(Call<List<Propriete>> call, Response<List<Propriete>> response) {
                 if (response.isSuccessful()) {
                     properties = response.body();
-                    mAdapter = new PropertiesAdapter(properties);
+                    mAdapter = new PropertiesAdapter(properties,  connectedUser);
                     recyclerView.setAdapter(mAdapter);
                     //Log.d("resultat:", client.getId().toString());
                     if (properties.size()<1) {
@@ -124,6 +124,7 @@ public class PropertiesActivity extends AppCompatActivity implements NavigationV
             public void onClick(View view) {
                 Intent intent = new Intent(PropertiesActivity.this, NewPropertie.class);
                 intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "create");
                 startActivity(intent);
 
             }

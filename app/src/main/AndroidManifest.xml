@@ -41,6 +41,7 @@
         <activity android:name=".NewContrat"></activity>
         <activity android:name=".DetailsPayementActivity"></activity>
         <activity android:name=".PayementClientActivity"></activity>
+        <activity android:name=".NewPayement"></activity>
     </application>
 
 </manifest>

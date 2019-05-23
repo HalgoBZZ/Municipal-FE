@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.halgo.municipalpfe.adapters.ContratAdapter;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Contrat;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class ContratsClientActivity extends AppCompatActivity implements Navigat
     private boolean isOpen;
     private RecyclerView recyclerView;
     private ContratAdapter mAdapter;
+    private Client connectedUser;
 
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
     private List<Contrat> contrats = new ArrayList<>();
@@ -52,7 +54,7 @@ public class ContratsClientActivity extends AppCompatActivity implements Navigat
         logout_icon = findViewById(R.id.logout_contrats_client);
         mDrawerlayout = findViewById(R.id.draw_contrats_client);
         recyclerView = findViewById(R.id.recycler_view_contrats_client);
-        mAdapter = new ContratAdapter(contrats);
+        mAdapter = new ContratAdapter(contrats, connectedUser);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.halgo.municipalpfe.DetailsOffreActivity;
 import com.halgo.municipalpfe.R;
+import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Offre;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public class OffreAdapter extends  RecyclerView.Adapter<OffreAdapter.MyViewHolde
 
     private List<Offre> offres;
     private Context mContext;
+    private Client connectedUser;
+    private Offre offre;
 
 
     public OffreAdapter(Context context, List<Offre> mOffres) {
@@ -42,7 +45,8 @@ public class OffreAdapter extends  RecyclerView.Adapter<OffreAdapter.MyViewHolde
         }
 
     }
-    public OffreAdapter(List<Offre> offres) {
+    public OffreAdapter(List<Offre> offres, Client connectedUser) {
+        this.connectedUser = connectedUser;
         this.offres = offres;
     }
 
@@ -55,7 +59,7 @@ public class OffreAdapter extends  RecyclerView.Adapter<OffreAdapter.MyViewHolde
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Offre offre = offres.get(position);
+        final Offre offre = offres.get(position);
         holder.titre.setText(offre.getTitre_offre());
         holder.description.setText(offre.getDescription_offre());
         holder.etat.setText(offre.getEtat().toString());
@@ -65,6 +69,8 @@ public class OffreAdapter extends  RecyclerView.Adapter<OffreAdapter.MyViewHolde
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, DetailsOffreActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("offre", offre);
                 mContext.startActivity(intent);
             }
         });

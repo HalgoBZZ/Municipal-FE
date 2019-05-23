@@ -26,6 +26,7 @@ import com.halgo.municipalpfe.api.ApiOffre;
 import com.halgo.municipalpfe.api.ApiUtils;
 import com.halgo.municipalpfe.modals.Client;
 import com.halgo.municipalpfe.modals.Offre;
+import com.halgo.municipalpfe.modals.Propriete;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -126,37 +127,70 @@ public class NewOffre extends AppCompatActivity implements NavigationView.OnNavi
         });
 
         service = ApiUtils.getOffreService();
+        String action = getIntent().getExtras().getString("action");
+        if (action.equals("create")) {
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    titre = titre_field.getText().toString().trim();
+                    description = description_field.getText().toString().trim();
+                    String prix_text = prix_field.getText().toString().trim();
 
-        ajouter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                titre = titre_field.getText().toString().trim();
-                description = description_field.getText().toString().trim();
-                String prix_text = prix_field.getText().toString().trim();
-
-                if(titre.isEmpty()){
-                    titre_field.setError("Champ obligatoire!");
-                    titre_field.requestFocus();
-                }else
-                    if(description.isEmpty()){
+                    if (titre.isEmpty()) {
+                        titre_field.setError("Champ obligatoire!");
+                        titre_field.requestFocus();
+                    } else if (description.isEmpty()) {
                         description_field.setError("Champ obligatoire!");
                         description_field.requestFocus();
-                    }else
-                        if(prix_text.isEmpty()) {
-                            prix_field.getText().toString().trim();
-                            prix_field.requestFocus();
-                        }
-                        else{
-                            prix = Double.parseDouble(prix_text);
-                            Offre offre = new Offre();
-                            offre.setTitre_offre(titre);
-                            offre.setDescription_offre(description);
-                            offre.setPrix_offre(prix);
-                            saveOffre(offre);
-                        }
+                    } else if (prix_text.isEmpty()) {
+                        prix_field.getText().toString().trim();
+                        prix_field.requestFocus();
+                    } else {
+                        prix = Double.parseDouble(prix_text);
+                        Offre offre = new Offre();
+                        offre.setTitre_offre(titre);
+                        offre.setDescription_offre(description);
+                        offre.setPrix_offre(prix);
+                        saveOffre(offre);
+                    }
 
-            }
-        });
+                }
+            });
+        } else {
+            ajouter.setText("Modifer");
+            final Offre offre1 = (Offre) getIntent().getSerializableExtra("offre");
+            titre_field.setText(offre1.getTitre_offre());
+            description_field.setText(offre1.getDescription_offre());
+            prix_field.setText(offre1.getPrix_offre()+"");
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    titre = titre_field.getText().toString().trim();
+                    description = description_field.getText().toString().trim();
+                    String prix_text = prix_field.getText().toString().trim();
+
+                    if (titre.isEmpty()) {
+                        titre_field.setError("Champ obligatoire!");
+                        titre_field.requestFocus();
+                    } else if (description.isEmpty()) {
+                        description_field.setError("Champ obligatoire!");
+                        description_field.requestFocus();
+                    } else if (prix_text.isEmpty()) {
+                        prix_field.getText().toString().trim();
+                        prix_field.requestFocus();
+                    } else {
+                        prix = Double.parseDouble(prix_text);
+                        Offre offre = new Offre();
+                        offre.setTitre_offre(titre);
+                        offre.setDescription_offre(description);
+                        offre.setPrix_offre(prix);
+                        offre.setId_offre(offre1.getId_offre());
+                        updateOffre(offre);
+                    }
+
+                }
+            });
+        }
     }
 
     @Override
@@ -211,6 +245,23 @@ public class NewOffre extends AppCompatActivity implements NavigationView.OnNavi
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Toast.makeText(NewOffre.this, "Offre ajouté avec succés", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NewOffre.this, OffresActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(NewOffre.this, "Une erreur s'est produite lors d'envoi des données", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateOffre(Offre offre){
+        Call<ResponseBody> call= service.updateOffre(offre);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(NewOffre.this, "Offre modifié avec succés", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewOffre.this, OffresActivity.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);

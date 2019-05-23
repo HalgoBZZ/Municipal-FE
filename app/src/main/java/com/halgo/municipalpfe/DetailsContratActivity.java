@@ -10,12 +10,24 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.halgo.municipalpfe.api.ApiContrat;
+import com.halgo.municipalpfe.api.ApiOffre;
+import com.halgo.municipalpfe.api.ApiUtils;
+import com.halgo.municipalpfe.modals.Client;
+import com.halgo.municipalpfe.modals.Contrat;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailsContratActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,7 +46,11 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
     private TextView prix;
     private TextView ajout;
     private TextView modification;
+    private TextView connectedUser_name;
     private boolean isOpen;
+    private Client connectedUser;
+    private Contrat contrat;
+    private ApiContrat service;
     //private String url ="http://10.0.3.2:8080/tournees/byreleveur";
 
 
@@ -59,9 +75,34 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
         prix = findViewById(R.id.prix_details_contrat);
         ajout = findViewById(R.id.ajout_details_contrat);
         modification = findViewById(R.id.modification_details_contrat);
+        connectedUser_name = findViewById(R.id.connected_user_details_contrat);
 
+        service = ApiUtils.getContratService();
+
+        connectedUser = (Client)getIntent().getSerializableExtra("connectedUser");
+        connectedUser_name.setText(connectedUser.getNom_client()+" "+connectedUser.getPrenom_client()+" ");
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
 
+        contrat = (Contrat)getIntent().getSerializableExtra("contrat");
+
+        if(!isNullOrEmpty(contrat.getTitre_contrat())){
+            titre.setText(contrat.getTitre_contrat());
+        }
+        if(!isNullOrEmpty(contrat.getDate_debut())){
+            debut.setText("Début de contrat: "+contrat.getDate_debut());
+        }
+        if(!isNullOrEmpty(contrat.getDate_fin())){
+            fin.setText("Fin de contrat: "+contrat.getDate_fin());
+        }
+        if(!isNullOrEmpty(contrat.getDate_ajout())) {
+            ajout.setText("Ajouté le "+contrat.getDate_ajout());
+        }
+        if(!isNullOrEmpty(contrat.getDate_modification())) {
+            modification.setText("Modifié le" +contrat.getDate_modification());
+        }
+        if(contrat.getPrix()>0){
+            prix.setText("Prix: "+contrat.getPrix());
+        }
 
         NavigationView navigationView = findViewById(R.id.nav_view_details_contrat);
         navigationView.setNavigationItemSelectedListener(this);
@@ -76,21 +117,30 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsContratActivity.this, NotificationsActivity.class));
+                Intent intent = new Intent(DetailsContratActivity.this, NotificationsActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, NotificationsActivity.class));
             }
         });
 
         help_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsContratActivity.this, HelpActivity.class));
+                Intent intent = new Intent(DetailsContratActivity.this, HelpActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, HelpActivity.class));
             }
         });
 
         profile_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DetailsContratActivity.this, ProfileActivity.class));
+                Intent intent = new Intent(DetailsContratActivity.this, ProfileActivity.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, ProfileActivity.class));
             }
         });
 
@@ -114,6 +164,40 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
                 }
             }
         });
+
+        delete_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("id: ", contrat.getId_contrat()+"");
+                Call<Void> deleteRequest = service.deleteContrat(contrat.getId_contrat());
+                deleteRequest.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Toast.makeText(DetailsContratActivity.this, "Opération effectué avec succés!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(DetailsContratActivity.this, Contrats.class);
+                        intent.putExtra("connectedUser", connectedUser);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(DetailsContratActivity.this, "Une erreur s'est produite lors de suppression!", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+            }
+        });
+
+        update_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(DetailsContratActivity.this, NewContrat.class);
+                intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "update");
+                intent.putExtra("contrat", contrat);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -122,22 +206,40 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.client_admin:
-                startActivity(new Intent(DetailsContratActivity.this, Clients.class));
+                Intent intent = new Intent(DetailsContratActivity.this, Clients.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+                //startActivity(new Intent(DetailsContratActivity.this, Clients.class));
                 break;
             case R.id.properties_admin:
-                startActivity(new Intent(DetailsContratActivity.this, PropertiesActivity.class));
+                Intent intent1 = new Intent(DetailsContratActivity.this, PropertiesActivity.class);
+                intent1.putExtra("connectedUser", connectedUser);
+                startActivity(intent1);
+                //startActivity(new Intent(DetailsContratActivity.this, PropertiesActivity.class));
                 break;
             case R.id.offres_admin:
-                startActivity(new Intent(DetailsContratActivity.this, OffresActivity.class));
+                Intent intent2 = new Intent(DetailsContratActivity.this, OffresActivity.class);
+                intent2.putExtra("connectedUser", connectedUser);
+                startActivity(intent2);
+               // startActivity(new Intent(DetailsContratActivity.this, OffresActivity.class));
                 break;
             case R.id.payements_admin:
-                startActivity(new Intent(DetailsContratActivity.this, Payements.class));
+                Intent intent3 = new Intent(DetailsContratActivity.this, Payements.class);
+                intent3.putExtra("connectedUser", connectedUser);
+                startActivity(intent3);
+                //startActivity(new Intent(DetailsContratActivity.this, Payements.class));
                 break;
             case R.id.contrats_admin:
-                startActivity(new Intent(DetailsContratActivity.this, Contrats.class));
+                Intent intent4 = new Intent(DetailsContratActivity.this, Contrats.class);
+                intent4.putExtra("connectedUser", connectedUser);
+                startActivity(intent4);
+               // startActivity(new Intent(DetailsContratActivity.this, Contrats.class));
                 break;
             case R.id.configs_admin:
-                startActivity(new Intent(DetailsContratActivity.this, Configurations.class));
+                Intent intent5 = new Intent(DetailsContratActivity.this, Configurations.class);
+                intent5.putExtra("connectedUser", connectedUser);
+                startActivity(intent5);
+                //startActivity(new Intent(DetailsContratActivity.this, Configurations.class));
                 break;
             default:
                 break;
@@ -149,6 +251,12 @@ public class DetailsContratActivity extends AppCompatActivity implements Navigat
     private void setNavigationViewListner() {
         NavigationView navigationView = findViewById(R.id.nav_view_details_contrat);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public static boolean isNullOrEmpty(String str) {
+        if(str != null && !str.isEmpty())
+            return false;
+        return true;
     }
 }
 

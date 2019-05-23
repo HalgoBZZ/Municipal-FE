@@ -98,7 +98,7 @@ public class Contrats extends AppCompatActivity implements NavigationView.OnNavi
                 if (response.isSuccessful()) {
                     contrats = response.body();
                     recyclerView.setItemAnimator(new DefaultItemAnimator());
-                    mAdapter = new ContratAdapter(contrats);
+                    mAdapter = new ContratAdapter(contrats, connectedUser);
                     recyclerView.setAdapter(mAdapter);
                     //Log.d("resultat:", client.getId().toString());
                     if (contrats.size()<1) {
@@ -121,6 +121,7 @@ public class Contrats extends AppCompatActivity implements NavigationView.OnNavi
             public void onClick(View view) {
                 Intent intent =new Intent(Contrats.this, NewContrat.class);
                 intent.putExtra("connectedUser", connectedUser);
+                intent.putExtra("action", "create");
                 startActivity(intent);
             }
         });

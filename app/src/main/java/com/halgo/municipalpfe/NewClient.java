@@ -8,6 +8,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -56,6 +57,7 @@ public class NewClient extends AppCompatActivity implements NavigationView.OnNav
     private LocalDate naissance;
     private String email;
     private String pwd;
+    private String action;
 
     private Client connectedUser;
     private TextView connectedUser_name;
@@ -84,6 +86,9 @@ public class NewClient extends AppCompatActivity implements NavigationView.OnNav
         connectedUser = (Client) getIntent().getSerializableExtra("connectedUser");
         connectedUser_name.setText(connectedUser.getNom_client() + " " + connectedUser.getPrenom_client() + " ");
         service = ApiUtils.getUserService();
+
+        action = getIntent().getExtras().getString("action");
+        Log.i("action: ", action);
 
         notification_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,57 +139,117 @@ public class NewClient extends AppCompatActivity implements NavigationView.OnNav
             }
         });
 
+        if (action.equals("create")) {
 
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    nom = nom_field.getText().toString().trim();
+                    prenom = prenom_field.getText().toString().trim();
+                    email = email_field.getText().toString().trim();
+                    pwd = pwd_field.getText().toString().trim();
 
-        ajouter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                nom = nom_field.getText().toString().trim();
-                prenom = prenom_field.getText().toString().trim();
-                email = email_field.getText().toString().trim();
-                pwd = pwd_field.getText().toString().trim();
+                    if (nom.isEmpty()) {
+                        nom_field.setError("Champ obligatoire!");
+                        nom_field.requestFocus();
+                    } else if (prenom.isEmpty()) {
+                        prenom_field.setError("Champ obligatoire!");
+                        prenom_field.requestFocus();
+                    } else if (cin < 0 || (cin_field.getText().toString().trim()).length() != 8) {
+                        cin_field.setError("Format CIN incorrecte");
+                        cin_field.requestFocus();
+                    } else if (email.isEmpty()) {
+                        email_field.setError("Champ obligatoire!");
+                        email_field.requestFocus();
+                    } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        email_field.setError("Adresse email invalide!");
+                        email_field.requestFocus();
+                    } else if (naissance_field.getText().toString().trim().isEmpty()) {
+                        naissance_field.setError("Champ Obligatoire!");
+                        naissance_field.requestFocus();
+                    } else if (pwd.isEmpty()) {
+                        pwd_field.setError("Champ obligatoire!");
+                        pwd_field.requestFocus();
+                    } else if (pwd.length() < 6) {
+                        pwd_field.setError("Mot de passe trés courte!");
+                        pwd_field.requestFocus();
+                    } else {
+                        cin = Integer.parseInt(cin_field.getText().toString().trim());
+                        naissance = LocalDate.parse(naissance_field.getText().toString().trim());
+                        Client client = new Client();
+                        client.setNom_client(nom);
+                        client.setPrenom_client(prenom);
+                        client.setCin(cin);
+                        client.setEmail(email);
+                        client.setPwd(pwd);
+                        client.setDate_naissance(naissance_field.getText().toString().trim());
+                        saveClient(client);
 
-
-                if (nom.isEmpty()) {
-                    nom_field.setError("Champ obligatoire!");
-                    nom_field.requestFocus();
-                } else if (prenom.isEmpty()) {
-                    prenom_field.setError("Champ obligatoire!");
-                    prenom_field.requestFocus();
-                } else if (cin < 0 || (cin_field.getText().toString().trim()).length()!=8) {
-                    cin_field.setError("Format CIN incorrecte");
-                    cin_field.requestFocus();
-                }else if (email.isEmpty()) {
-                    email_field.setError("Champ obligatoire!");
-                    email_field.requestFocus();
-                }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    email_field.setError("Adresse email invalide!");
-                    email_field.requestFocus();
-                }else if (naissance_field.getText().toString().trim().isEmpty()) {
-                    naissance_field.setError("Champ Obligatoire!");
-                    naissance_field.requestFocus();
-                }else if (pwd.isEmpty()) {
-                    pwd_field.setError("Champ obligatoire!");
-                    pwd_field.requestFocus();
-                }else if (pwd.length()<6){
-                    pwd_field.setError("Mot de passe trés courte!");
-                    pwd_field.requestFocus();
-                } else {
-                    cin = Integer.parseInt(cin_field.getText().toString().trim());
-                    naissance = LocalDate.parse(naissance_field.getText().toString().trim());
-                    Client client = new Client();
-                    client.setNom_client(nom);
-                    client.setPrenom_client(prenom);
-                    client.setCin(cin);
-                    client.setEmail(email);
-                    client.setPwd(pwd);
-                    client.setDate_naissance(naissance_field.getText().toString().trim());
-                    saveClient(client);
+                    }
 
                 }
+            });
 
-            }
-        });
+        }else {
+            ajouter.setText("Modifier");
+            final Client client = (Client) getIntent().getSerializableExtra("client");
+            nom_field.setText(client.getNom_client());
+            prenom_field.setText(client.getPrenom_client());
+            email_field.setText(client.getEmail());
+            pwd_field.setText(client.getPwd());
+            cin_field.setText(client.getCin()+"");
+            naissance_field.setText((client.getDate_naissance()));
+            ajouter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    nom = nom_field.getText().toString().trim();
+                    prenom = prenom_field.getText().toString().trim();
+                    email = email_field.getText().toString().trim();
+                    pwd = pwd_field.getText().toString().trim();
+
+                    if (nom.isEmpty()) {
+                        nom_field.setError("Champ obligatoire!");
+                        nom_field.requestFocus();
+                    } else if (prenom.isEmpty()) {
+                        prenom_field.setError("Champ obligatoire!");
+                        prenom_field.requestFocus();
+                    } else if (cin < 0 || (cin_field.getText().toString().trim()).length() != 8) {
+                        cin_field.setError("Format CIN incorrecte");
+                        cin_field.requestFocus();
+                    } else if (email.isEmpty()) {
+                        email_field.setError("Champ obligatoire!");
+                        email_field.requestFocus();
+                    } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                        email_field.setError("Adresse email invalide!");
+                        email_field.requestFocus();
+                    } else if (naissance_field.getText().toString().trim().isEmpty()) {
+                        naissance_field.setError("Champ Obligatoire!");
+                        naissance_field.requestFocus();
+                    } else if (pwd.isEmpty()) {
+                        pwd_field.setError("Champ obligatoire!");
+                        pwd_field.requestFocus();
+                    } else if (pwd.length() < 6) {
+                        pwd_field.setError("Mot de passe trés courte!");
+                        pwd_field.requestFocus();
+                    } else {
+                        cin = Integer.parseInt(cin_field.getText().toString().trim());
+                        naissance = LocalDate.parse(naissance_field.getText().toString().trim());
+                        Client client1 = new Client();
+                        client1.setNom_client(nom);
+                        client1.setPrenom_client(prenom);
+                        client1.setCin(cin);
+                        client1.setEmail(email);
+                        client1.setPwd(pwd);
+                        client1.setDate_naissance(naissance_field.getText().toString().trim());
+                        client1.setId_compte(client.getId_compte());
+                        updateClient(client1);
+
+                    }
+
+                }
+            });
+
+        }
     }
 
     @Override
@@ -239,6 +304,23 @@ public class NewClient extends AppCompatActivity implements NavigationView.OnNav
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Toast.makeText(NewClient.this, "Client ajouté avec succés", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(NewClient.this, Clients.class);
+                intent.putExtra("connectedUser", connectedUser);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(NewClient.this, "Une erreur s'est produite lors d'envoi des données", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateClient(Client client) {
+        Call<ResponseBody> call = service.updateClient(client);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(NewClient.this, "Client modifié avec succés", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewClient.this, Clients.class);
                 intent.putExtra("connectedUser", connectedUser);
                 startActivity(intent);
